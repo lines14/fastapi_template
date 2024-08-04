@@ -12,10 +12,10 @@ load_dotenv()
 
 @app.get("/", response_class=HTMLResponse)
 async def index(request: Request) -> str:
-    return welcome_handler.welcome(request)
+    return await welcome_handler.welcome(request)
 
 # Api routes
 @app.post('/template')
 # @bearer_token
 async def template(request: Request) -> str:
-    return template_handler.template(request)
+    return await template_handler.template(request)
