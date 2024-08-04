@@ -2,7 +2,7 @@ from repositories.redis import RedisRepository
 from typing import Callable, Any
 from flask import request, Response, g
 from utils.jwt import verify_token
-from utils.api_repsponse import send_error
+from utils.responses import send_error
 
 redis_repository = RedisRepository()
 
