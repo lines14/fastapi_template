@@ -7,7 +7,11 @@ from handlers.template_handler import TemplateHandler
 from middlewares.auth_middleware import AuthMiddleware
 
 load_dotenv()
-app = FastAPI()
+app = FastAPI(
+    title='FastAPI template',
+    docs_url='/docs',
+    root_path='/api'
+)
 auth_handler = AuthHandler()
 auth_middleware = AuthMiddleware()
 example_handler = ExampleHandler()
