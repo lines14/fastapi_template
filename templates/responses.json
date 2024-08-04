@@ -1,0 +1,4 @@
+{
+    "unauthorized": ["Unauthorized", "", 401],
+    "invalidCredentials": ["Invalid credentials", "", 401]
+}

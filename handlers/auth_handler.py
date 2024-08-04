@@ -2,6 +2,7 @@ import traceback
 from os import getenv
 from fastapi import Request
 from utils.JWT_utils import JWTUtils
+from utils.data_utils import DataUtils
 from utils.response_utils import ResponseUtils
 from repositories.redis_repository import RedisRepository
 
@@ -15,7 +16,7 @@ class AuthHandler:
                 redis_repository.set_user(request_data['login'], token)
                 return await ResponseUtils.success("Success", token)
             else:
-                return await ResponseUtils.error('Invalid credentials', '', 401)
+                return await ResponseUtils.error(*DataUtils.responses.invalidCredentials)
         except Exception as e:
             with open("log.txt", "a") as file:
                 file.write(traceback.format_exc() + '\n')

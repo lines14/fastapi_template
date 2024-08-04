@@ -21,7 +21,12 @@ async def template(request: Request) -> str:
 async def auth(request: Request) -> str:
     return await auth_handler.auth(request)
 
-@app.post('/example')
-@auth_middleware.bearer_token
-async def example(request: Request) -> str:
-    return await example_handler.example(request)
+@app.get('/get')
+@auth_middleware.check_bearer_token
+async def get(request: Request) -> str:
+    return await example_handler.get(request)
+
+@app.post('/post')
+@auth_middleware.check_bearer_token
+async def post(request: Request) -> str:
+    return await example_handler.post(request)
