@@ -12,6 +12,7 @@ app = FastAPI(
     docs_url='/docs',
     root_path='/api'
 )
+
 auth_handler = AuthHandler()
 auth_middleware = AuthMiddleware()
 example_handler = ExampleHandler()

@@ -10,5 +10,5 @@ class TemplateHandler:
             'fastapiVersion': __version__
         }
 
-        templates = Jinja2Templates(directory="templates")
+        templates = Jinja2Templates(directory="../templates")
         return templates.TemplateResponse("index.html", data)
