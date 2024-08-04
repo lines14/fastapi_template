@@ -10,6 +10,9 @@ class RedisRepository:
             password=getenv('REDIS_PASSWORD')
         )
 
-    def get_user(self ,user_id: str) -> Dict:
-        response = self._client.get('database_users' + user_id)
+    def set_user(self, user_login: str, user_password: str) -> None:
+        self._client.set(user_login, user_password)
+
+    def get_user(self, user_login: str) -> Dict:
+        response = self._client.get(user_login)
         return response.decode('utf-8')

@@ -1,14 +1,13 @@
 import traceback
 from fastapi import Request
-from utils.responses import Responses
+from utils.response_utils import ResponseUtils
 
 class ExampleHandler:
-    @staticmethod
-    async def example(request: Request) -> str:
+    async def example(self, request: Request) -> str:
         try:
             data = await request.json()
-            return await Responses.success("Success", data)
+            return await ResponseUtils.success("Success", data)
         except Exception as e:
             with open("log.txt", "a") as file:
                 file.write(traceback.format_exc() + '\n')
-            return await Responses.error(str(e))
+            return await ResponseUtils.error(str(e))

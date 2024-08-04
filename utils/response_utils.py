@@ -2,7 +2,7 @@ import json
 from typing import Any
 from fastapi import Response
 
-class Responses:
+class ResponseUtils:
     @staticmethod
     async def success(msg: str, data: Any = '', status_code: int = 200) -> Response:
         content = {

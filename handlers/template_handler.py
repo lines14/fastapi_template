@@ -3,8 +3,7 @@ from fastapi import Request, __version__
 from fastapi.templating import Jinja2Templates
 
 class TemplateHandler:
-    @staticmethod
-    async def template(request: Request) -> str:
+    async def template(self, request: Request) -> str:
         data = {
             'request': request,
             'pythonVersion': version,
