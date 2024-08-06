@@ -1,6 +1,7 @@
 import traceback
 from os import getenv
 from fastapi import Request
+from utils.logger import Logger
 from utils.JWT_utils import JWTUtils
 from utils.data_utils import DataUtils
 from utils.response_utils import ResponseUtils
@@ -19,6 +20,5 @@ class AuthHandler:
             else:
                 return await ResponseUtils.error(*DataUtils.responses.invalidCredentials)
         except Exception as e:
-            with open("log.txt", "a") as file:
-                file.write(traceback.format_exc() + '\n')
+            Logger.log(traceback.format_exc())
             return await ResponseUtils.error(str(e))
