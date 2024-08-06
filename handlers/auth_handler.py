@@ -10,7 +10,8 @@ class AuthHandler:
     async def auth(self, request: Request) -> str:
         try:
             request_data = await request.json()
-            if request_data['login'] == getenv('USER_LOGIN') and request_data['password'] == getenv('USER_PASSWORD'):
+            if (request_data['login'] == getenv('USER_LOGIN') 
+            and request_data['password'] == getenv('USER_PASSWORD')):
                 token = JWTUtils.generate_token(request_data['login'])
                 redis_repository = RedisRepository()
                 redis_repository.set_user(request_data['login'], token)

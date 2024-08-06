@@ -1,11 +1,12 @@
 import traceback
 from fastapi import Request
+from utils.data_utils import DataUtils
 from utils.response_utils import ResponseUtils
 
 class ExampleHandler:
     async def get(self, request: Request) -> str:
         try:
-            return await ResponseUtils.success("Hello, this response was created in FastAPI!")
+            return await ResponseUtils.success(DataUtils.responses.info)
         except Exception as e:
             with open("log.txt", "a") as file:
                 file.write(traceback.format_exc() + '\n')

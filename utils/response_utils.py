@@ -11,7 +11,11 @@ class ResponseUtils:
             'data': data
         }
 
-        return Response(content=json.dumps(content), media_type="application/json", status_code=status_code)
+        return Response(
+            content=json.dumps(content), 
+            media_type="application/json", 
+            status_code=status_code
+        )
 
     @staticmethod
     async def error(msg: str, data: Any = '', status_code: int = 400) -> Response:
@@ -21,4 +25,8 @@ class ResponseUtils:
             'data': data
         }
 
-        return Response(content=json.dumps(content), media_type="application/json", status_code=status_code)
+        return Response(
+            content=json.dumps(content), 
+            media_type="application/json", 
+            status_code=status_code
+        )

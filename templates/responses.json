@@ -1,4 +1,5 @@
 {
     "unauthorized": ["Unauthorized", "", 401],
-    "invalidCredentials": ["Invalid credentials", "", 401]
+    "invalidCredentials": ["Invalid credentials", "", 401],
+    "info": "Hello, this response was created in FastAPI"
 }
