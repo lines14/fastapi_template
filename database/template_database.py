@@ -5,12 +5,12 @@ from database.base.base_db import BaseDB
 
 class TemplateDatabase(BaseDB):
     def __init__(self):
-        HOST = getenv('MYSQL_HOST')
-        PORT = getenv('MYSQL_PORT')
-        USER = getenv('MYSQL_USER')
-        PASSWORD = getenv('MYSQL_PASSWORD')
-        DATABASE = getenv('MYSQL_DATABASE')
-        super().__init__(HOST, PORT, DATABASE, USER, PASSWORD)
+        super().__init__(
+            getenv('MYSQL_HOST'), 
+            getenv('MYSQL_PORT'), 
+            getenv('MYSQL_DATABASE'), 
+            getenv('MYSQL_ROOT_PASSWORD')
+        )
         self.session: Session = self.SessionLocal()
 
     def create_user(self, login, token):

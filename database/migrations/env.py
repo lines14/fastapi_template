@@ -1,5 +1,7 @@
-import re
-from os import getenv
+from os import getcwd
+from dotenv import dotenv_values
+env_vars = dotenv_values(dotenv_path=f'{getcwd()}/.env')
+
 from logging.config import fileConfig
 
 from sqlalchemy import engine_from_config
@@ -10,6 +12,15 @@ from alembic import context
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 config = context.config
+
+HOST = env_vars.get('MYSQL_HOST')
+PORT = env_vars.get('MYSQL_PORT')
+DATABASE = env_vars.get('MYSQL_DATABASE')
+PASSWORD = env_vars.get('MYSQL_ROOT_PASSWORD')
+config.set_main_option(
+    'sqlalchemy.url', 
+    f'mysql+pymysql://root:{PASSWORD}@{HOST}:{PORT}/{DATABASE}'
+)
 
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.
@@ -40,31 +51,8 @@ def run_migrations_offline() -> None:
     script output.
 
     """
-
-    USER = getenv('MYSQL_USER')
-    HOST = getenv('MYSQL_HOST')
-    PORT = getenv('MYSQL_PORT')
-    PASSWORD = getenv('MYSQL_PASSWORD')
-    DATABASE = getenv('MYSQL_DATABASE')
-    url = f'mysql+pymysql://{USER}:{PASSWORD}@{HOST}:{PORT}/{DATABASE}'
-
-    # alembic_config = config.get_section(config.config_ini_section)
-    # alembic_config['sqlalchemy.url'] = f'mysql+pymysql://root:{PASSWORD}@{HOST}:{PORT}/{DATABASE}'
-    # config.set_main_option('sqlalchemy.url', f'mysql+pymysql://root:{PASSWORD}@{HOST}:{PORT}/{DATABASE}')
-    # url = config.get_main_option("sqlalchemy.url")
-
-    # url_tokens = {
-    #     "MYSQL_USER": getenv("MYSQL_USER", ""),
-    #     "MYSQL_HOST": getenv("MYSQL_HOST", ""),
-    #     "MYSQL_PASSWORD": getenv("MYSQL_PASSWORD", ""),
-    #     "MYSQL_DATABASE": getenv("MYSQL_DATABASE", "")
-    # }
-
-    # url = config.get_main_option("sqlalchemy.url")
-    # url = re.sub(r"\${(.+?)}", lambda m: url_tokens[m.group(1)], url)
-
     context.configure(
-        url=url,
+        url=config.get_main_option("sqlalchemy.url"),
         target_metadata=target_metadata,
         literal_binds=True,
         dialect_opts={"paramstyle": "named"},
