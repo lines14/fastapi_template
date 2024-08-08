@@ -1,4 +1,5 @@
 import jwt
+import bcrypt
 import datetime
 from utils.storage_utils import StorageUtils
 from cryptography.hazmat.primitives import serialization
@@ -31,6 +32,12 @@ class JWTUtils:
         except jwt.InvalidTokenError as e:
             raise e
 
+    @staticmethod
+    def hash_token(token: str):
+        token_bytes = token.encode('utf-8')
+        hashed_token = bcrypt.hashpw(token_bytes, bcrypt.gensalt())
+        return hashed_token.decode('utf-8')
+    
     @staticmethod
     def __parse_public_key(key_pem: str) -> serialization.load_pem_public_key:
         key_bytes = key_pem.encode()

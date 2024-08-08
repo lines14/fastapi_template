@@ -8,3 +8,5 @@ Jinja2==3.1.2
 classutilities==0.2.1
 SQLAlchemy==2.0.32
 PyMySQL==1.1.1
+alembic==1.13.2
+bcrypt==4.2.0
