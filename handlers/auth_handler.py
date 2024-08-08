@@ -5,6 +5,7 @@ from utils.logger import Logger
 from utils.JWT_utils import JWTUtils
 from utils.data_utils import DataUtils
 from utils.response_utils import ResponseUtils
+from database.template_database import TemplateDatabase
 from repositories.redis_repository import RedisRepository
 
 class AuthHandler:
@@ -16,6 +17,8 @@ class AuthHandler:
                 token = JWTUtils.generate_token(request_data['login'])
                 redis_repository = RedisRepository()
                 redis_repository.set_user(request_data['login'], token)
+                template_database = TemplateDatabase()
+                template_database.createUser(request_data['login'])
                 return await ResponseUtils.success("Success", token)
             else:
                 return await ResponseUtils.error(*DataUtils.responses.invalidCredentials)

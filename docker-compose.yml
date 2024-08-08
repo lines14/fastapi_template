@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   redis:
     image: "redis:latest"
@@ -11,6 +9,23 @@ services:
     volumes:
       - redis_data:/data
     command: ["redis-server", "--requirepass", "${REDIS_PASSWORD}"]
+    networks:
+      - fastapi-network
+
+  mysql:
+    image: "mysql:latest"
+    container_name: mysql_service
+    restart: unless-stopped
+    tty: true
+    environment:
+      MYSQL_ROOT_PASSWORD: "${MYSQL_ROOT_PASSWORD}"
+      MYSQL_DATABASE: "${MYSQL_DATABASE}"
+      MYSQL_USER: "${MYSQL_USER}"
+      MYSQL_PASSWORD: "${MYSQL_PASSWORD}"
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
     networks:
       - fastapi-network
 
@@ -29,11 +44,13 @@ services:
       - REDIS_PORT=6379
     depends_on:
       - redis
+      - mysql
     networks:
       - fastapi-network
 
 volumes:
   redis_data:
+  mysql_data:
 
 networks:
   fastapi-network:
