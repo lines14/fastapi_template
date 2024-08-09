@@ -1,17 +1,15 @@
 from os import getcwd
 from dotenv import dotenv_values
-env_vars = dotenv_values(dotenv_path=f'{getcwd()}/.env')
-
 from logging.config import fileConfig
-
-from sqlalchemy import engine_from_config
-from sqlalchemy import pool
-
+from sqlalchemy import engine_from_config, pool
 from alembic import context
+from alembic.runtime.environment import EnvironmentContext
+from alembic.runtime.migration import MigrationContext
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 config = context.config
+env_vars = dotenv_values(dotenv_path=f'{getcwd()}/.env')
 
 HOST = env_vars.get('MYSQL_HOST')
 PORT = env_vars.get('MYSQL_PORT')
@@ -77,11 +75,24 @@ def run_migrations_online() -> None:
 
     with connectable.connect() as connection:
         context.configure(
-            connection=connection, target_metadata=target_metadata
+            connection=connection, 
+            target_metadata=target_metadata
         )
 
         with context.begin_transaction():
             context.run_migrations()
+
+            # Custom logging of migration names
+            mc = MigrationContext.configure(connection)
+            current_rev = mc.get_current_revision()
+            new_rev = mc.get_current_head()
+
+            if current_rev != new_rev:
+                with connection.begin() as transaction:
+                    connection.execute(
+                        "INSERT INTO migrations (revision, message) VALUES (:rev, :msg)",
+                        {"rev": new_rev, "msg": context.get_revision_message()}
+                    )
 
 
 if context.is_offline_mode():
