@@ -4,8 +4,8 @@ from utils.logger import Logger
 from utils.data_utils import DataUtils
 from utils.response_utils import ResponseUtils
 
-class ExampleHandler:
-    async def get(self, request: Request) -> str:
+class GreetingsHandler:
+    async def greetings(self, request: Request) -> str:
         try:
             return await ResponseUtils.success(DataUtils.responses.info)
         except Exception as e:
