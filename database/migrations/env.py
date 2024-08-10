@@ -1,15 +1,20 @@
-from os import getcwd
+import os
+import traceback
+from typing import Dict
+from alembic import context
 from dotenv import dotenv_values
 from logging.config import fileConfig
-from sqlalchemy import engine_from_config, pool
-from alembic import context
-from alembic.runtime.environment import EnvironmentContext
+from sqlalchemy.engine import reflection
+from sqlalchemy import engine_from_config, pool, text
 from alembic.runtime.migration import MigrationContext
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
+
 config = context.config
-env_vars = dotenv_values(dotenv_path=f'{getcwd()}/.env')
+env_vars = dotenv_values(dotenv_path=f'{os.getcwd()}/.env')
+current_dir = os.path.dirname(os.path.abspath(__file__))
+versions_dir = os.path.join(current_dir, 'versions')
 
 HOST = env_vars.get('MYSQL_HOST')
 PORT = env_vars.get('MYSQL_PORT')
@@ -22,12 +27,15 @@ config.set_main_option(
 
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.
+
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
 # add your model's MetaData object here
 # for 'autogenerate' support
+
 from database.models import *
+from utils.logger import Logger
 from database.base.base_db import Base
 target_metadata = Base.metadata
 
@@ -36,6 +44,47 @@ target_metadata = Base.metadata
 # my_important_option = config.get_main_option("my_important_option")
 # ... etc.
 
+def has_table(engine, table_name):
+    inspector = reflection.Inspector.from_engine(engine)
+    tables = inspector.get_table_names()
+    return table_name in tables
+
+def filter_migrations(migrations: Dict[str, any], version: tuple) -> Dict[str, any]:
+    sorted_keys = sorted(migrations.keys())
+    if len(version) != 0:
+        filtered_keys = [key for key in sorted_keys if key <= version[0]]
+    else:
+        filtered_keys = [sorted_keys[0]]
+    filtered_dict = {key: migrations[key] for key in filtered_keys}
+    return filtered_dict
+
+def get_migrations(dirname):
+    migrations = {}
+    for filename in os.listdir(dirname):
+        if filename.endswith('.py'):
+            parts = filename[:-3].split('_', 4)
+            if len(parts) >= 5:
+                revision = '_'.join(parts[:4])
+                name = '_'.join(parts[4:])
+            else:
+                continue
+            name = name.replace('_', ' ').strip()
+            migrations[revision] = name
+    return migrations
+
+def log_migrations(connection, version, migrations):
+    truncated_migrations = filter_migrations(migrations, version)
+    if has_table(connection.engine, 'migrations'):
+        for key, value in truncated_migrations.items():
+            try:
+                sql = text(
+                    "INSERT INTO migrations (revision, name) VALUES (:revision, :name) "
+                    "ON DUPLICATE KEY UPDATE name = :name;"
+                )
+                connection.execute(sql, {"revision": key, "name": value})
+                connection.commit()
+            except Exception as e:
+                Logger.log(traceback.format_exc())
 
 def run_migrations_offline() -> None:
     """Run migrations in 'offline' mode.
@@ -59,7 +108,6 @@ def run_migrations_offline() -> None:
     with context.begin_transaction():
         context.run_migrations()
 
-
 def run_migrations_online() -> None:
     """Run migrations in 'online' mode.
 
@@ -81,19 +129,10 @@ def run_migrations_online() -> None:
 
         with context.begin_transaction():
             context.run_migrations()
-
-            # Custom logging of migration names
             mc = MigrationContext.configure(connection)
-            current_rev = mc.get_current_revision()
-            new_rev = mc.get_current_head()
-
-            if current_rev != new_rev:
-                with connection.begin() as transaction:
-                    connection.execute(
-                        "INSERT INTO migrations (revision, message) VALUES (:rev, :msg)",
-                        {"rev": new_rev, "msg": context.get_revision_message()}
-                    )
-
+            version = mc.get_current_heads()
+            migrations = get_migrations(versions_dir)
+            log_migrations(connection, version, migrations)
 
 if context.is_offline_mode():
     run_migrations_offline()

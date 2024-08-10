@@ -11,7 +11,6 @@ from repositories.redis_repository import RedisRepository
 class AuthHandler:
     async def auth(self, request: Request) -> str:
         try:
-            # print(request.headers.get('host'))
             request_data = await request.json()
             if (request_data['login'] == getenv('USER_LOGIN') 
             and request_data['password'] == getenv('USER_PASSWORD')):

@@ -1,8 +1,8 @@
 """create migrations table
 
-Revision ID: 7bb2f3a2cb78
-Revises: c8d8a7166bfb
-Create Date: 2024-08-09 18:13:24.463996
+Revision ID: 2024_08_10_000100
+Revises: 
+Create Date: 2024-08-10 00:01:01.356578
 
 """
 from typing import Sequence, Union
@@ -12,8 +12,8 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = '7bb2f3a2cb78'
-down_revision: Union[str, None] = 'c8d8a7166bfb'
+revision: str = '2024_08_10_000100'
+down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 
@@ -22,9 +22,10 @@ def upgrade() -> None:
     op.create_table('migrations',
     sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
     sa.Column('revision', sa.String(length=255), nullable=False),
-    sa.Column('message', sa.String(length=255), nullable=False),
+    sa.Column('name', sa.String(length=255), nullable=False),
     sa.Column('created_at', sa.DateTime(), server_default=sa.text('now()'), nullable=False),
-    sa.PrimaryKeyConstraint('id')
+    sa.PrimaryKeyConstraint('id'),
+    sa.UniqueConstraint('revision')
     )
     op.create_index(op.f('ix_migrations_revision'), 'migrations', ['revision'], unique=False)
 

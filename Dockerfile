@@ -5,7 +5,7 @@ WORKDIR /app
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 
-RUN apk update && apk add alpine-sdk gcc musl-dev python3-dev libffi-dev openssl-dev
+RUN apk update && apk add bash alpine-sdk gcc musl-dev python3-dev libffi-dev openssl-dev
 
 RUN addgroup -g 1000 mygroup && adduser -u 1000 -G mygroup -S myuser
 
@@ -24,5 +24,9 @@ COPY . .
 RUN chmod -R 777 /app
 
 USER myuser
+
+RUN echo "alias migration='python database/migrations/generator.py'" >> ~/.bashrc
+
+RUN /bin/sh -c "source ../home/myuser/.bashrc"
 
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
