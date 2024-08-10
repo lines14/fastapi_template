@@ -13,7 +13,7 @@ class TemplateDatabase(BaseDB):
         )
         self.session: Session = self.SessionLocal()
 
-    def create_user(self, login, token):
-        new_user = User(login=login, token=token)
+    def create_user(self, login, token, host, user_agent):
+        new_user = User(login=login, token=token, host=host, user_agent=user_agent)
         self.session.add(new_user)
         self.session.commit()

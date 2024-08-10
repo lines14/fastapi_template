@@ -18,7 +18,12 @@ class AuthHandler:
                 redis_repository = RedisRepository()
                 redis_repository.set_user(request_data['login'], token)
                 template_database = TemplateDatabase()
-                template_database.create_user(request_data['login'], JWTUtils.hash_token(token))
+                template_database.create_user(
+                    request_data['login'], 
+                    JWTUtils.hash_token(token),
+                    request.headers.get('host'),
+                    request.headers.get('user-agent')
+                )
                 return await ResponseUtils.success("Success", token)
             else:
                 return await ResponseUtils.error(*DataUtils.responses.invalidCredentials)
