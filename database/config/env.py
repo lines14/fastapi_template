@@ -14,7 +14,7 @@ from alembic.runtime.migration import MigrationContext
 config = context.config
 env_vars = dotenv_values(dotenv_path=f'{os.getcwd()}/.env')
 current_dir = os.path.dirname(os.path.abspath(__file__))
-migrations_dir = os.path.join(current_dir, '../../migrations')
+migrations_dir = os.path.join(current_dir, '../migrations')
 
 HOST = env_vars.get('MYSQL_HOST')
 PORT = env_vars.get('MYSQL_PORT')

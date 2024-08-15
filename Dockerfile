@@ -22,10 +22,10 @@ RUN chmod -R 777 /app
 
 USER myuser
 
-RUN echo "alias migrate='python database/config/scripts/updater.py --migrate'" >> ~/.bashrc
-RUN echo "alias seed='python database/config/scripts/updater.py --seed'" >> ~/.bashrc
-RUN echo "alias migration='python database/config/scripts/generator.py --migration'" >> ~/.bashrc
-RUN echo "alias seeder='python database/config/scripts/generator.py --seeder'" >> ~/.bashrc
+RUN echo "alias migrate='alembic upgrade head'" >> ~/.bashrc
+RUN echo "alias migrate:fresh='alembic downgrade base && alembic upgrade head'" >> ~/.bashrc
+RUN echo "alias seed='python database/config/seed.py'" >> ~/.bashrc
+RUN echo "alias migration='python database/config/create_migration.py'" >> ~/.bashrc
 RUN /bin/sh -c "source ../home/myuser/.bashrc"
 
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
