@@ -2,11 +2,11 @@ import sys
 import subprocess
 from datetime import datetime
 
-def create_migration(name, revision):
+def create_migration(name, version):
     command = [
         "alembic", "revision",
         "--message", name,
-        "--rev-id", revision
+        "--rev-id", version
     ]
     subprocess.run(command, check=True)
 
@@ -15,5 +15,5 @@ if len(sys.argv) < 2:
     sys.exit(1)
 
 name = sys.argv[1]
-revision = datetime.now().strftime("%Y_%m_%d_%H%M%S")
-create_migration(name, revision)
+version = datetime.now().strftime("%Y_%m_%d_%H%M%S")
+create_migration(name, version)

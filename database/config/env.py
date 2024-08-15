@@ -14,7 +14,7 @@ from alembic.runtime.migration import MigrationContext
 config = context.config
 env_vars = dotenv_values(dotenv_path=f'{os.getcwd()}/.env')
 current_dir = os.path.dirname(os.path.abspath(__file__))
-versions_dir = os.path.join(current_dir, 'versions')
+migrations_dir = os.path.join(current_dir, '../migrations')
 
 HOST = env_vars.get('MYSQL_HOST')
 PORT = env_vars.get('MYSQL_PORT')
@@ -49,10 +49,10 @@ def has_table(engine, table_name):
     tables = inspector.get_table_names()
     return table_name in tables
 
-def filter_migrations(migrations: Dict[str, any], version: tuple) -> Dict[str, any]:
+def filter_migrations(migrations: Dict[str, any], migration: tuple) -> Dict[str, any]:
     sorted_keys = sorted(migrations.keys())
-    if len(version) != 0:
-        filtered_keys = [key for key in sorted_keys if key <= version[0]]
+    if len(migration) != 0:
+        filtered_keys = [key for key in sorted_keys if key <= migration[0]]
     else:
         filtered_keys = [sorted_keys[0]]
     filtered_dict = {key: migrations[key] for key in filtered_keys}
@@ -64,12 +64,12 @@ def get_migrations(dirname):
         if filename.endswith('.py'):
             parts = filename[:-3].split('_', 4)
             if len(parts) >= 5:
-                revision = '_'.join(parts[:4])
+                version = '_'.join(parts[:4])
                 name = '_'.join(parts[4:])
             else:
                 continue
             name = name.replace('_', ' ').strip()
-            migrations[revision] = name
+            migrations[version] = name
     return migrations
 
 def log_migrations(connection, version, migrations):
@@ -78,10 +78,10 @@ def log_migrations(connection, version, migrations):
         for key, value in truncated_migrations.items():
             try:
                 sql = text(
-                    "INSERT INTO migrations (revision, name) VALUES (:revision, :name) "
+                    "INSERT INTO migrations (version, name) VALUES (:version, :name) "
                     "ON DUPLICATE KEY UPDATE name = :name;"
                 )
-                connection.execute(sql, {"revision": key, "name": value})
+                connection.execute(sql, {"version": key, "name": value})
                 connection.commit()
             except Exception as e:
                 Logger.log(traceback.format_exc())
@@ -131,7 +131,7 @@ def run_migrations_online() -> None:
             context.run_migrations()
             mc = MigrationContext.configure(connection)
             version = mc.get_current_heads()
-            migrations = get_migrations(versions_dir)
+            migrations = get_migrations(migrations_dir)
             log_migrations(connection, version, migrations)
 
 if context.is_offline_mode():
