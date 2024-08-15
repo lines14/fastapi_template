@@ -14,7 +14,7 @@ from alembic.runtime.migration import MigrationContext
 config = context.config
 env_vars = dotenv_values(dotenv_path=f'{os.getcwd()}/.env')
 current_dir = os.path.dirname(os.path.abspath(__file__))
-migrations_dir = os.path.join(current_dir, '../migrations')
+migrations_dir = os.path.join(current_dir, '../../migrations')
 
 HOST = env_vars.get('MYSQL_HOST')
 PORT = env_vars.get('MYSQL_PORT')
@@ -34,10 +34,10 @@ if config.config_file_name is not None:
 # add your model's MetaData object here
 # for 'autogenerate' support
 
-from database.models import *
+from models import *
 from utils.logger import Logger
-from database.base.base_db import Base
-target_metadata = Base.metadata
+from database.database import Database
+target_metadata = Database.Base.metadata
 
 # other values from the config, defined by the needs of env.py,
 # can be acquired:
@@ -49,10 +49,10 @@ def has_table(engine, table_name):
     tables = inspector.get_table_names()
     return table_name in tables
 
-def filter_migrations(migrations: Dict[str, any], migration: tuple) -> Dict[str, any]:
+def filter_migrations(migrations: Dict[str, any], version: tuple) -> Dict[str, any]:
     sorted_keys = sorted(migrations.keys())
-    if len(migration) != 0:
-        filtered_keys = [key for key in sorted_keys if key <= migration[0]]
+    if len(version) != 0:
+        filtered_keys = [key for key in sorted_keys if key <= version[0]]
     else:
         filtered_keys = [sorted_keys[0]]
     filtered_dict = {key: migrations[key] for key in filtered_keys}

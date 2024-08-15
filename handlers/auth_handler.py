@@ -1,12 +1,16 @@
 import traceback
 from os import getenv
+from models import User
 from fastapi import Request
 from utils.logger import Logger
 from utils.JWT_utils import JWTUtils
 from utils.data_utils import DataUtils
+from database.database import Database
 from utils.response_utils import ResponseUtils
-from database.template_database import TemplateDatabase
 from repositories.redis_repository import RedisRepository
+
+database = Database()
+redis_repository = RedisRepository()
 
 class AuthHandler:
     async def auth(self, request: Request) -> str:
@@ -15,10 +19,9 @@ class AuthHandler:
             if (request_data['login'] == getenv('USER_LOGIN') 
             and request_data['password'] == getenv('USER_PASSWORD')):
                 token = JWTUtils.generate_token(request_data['login'])
-                redis_repository = RedisRepository()
                 redis_repository.set_user(request_data['login'], token)
-                template_database = TemplateDatabase()
-                template_database.create_user(
+                database.create(
+                    User,
                     request_data['login'], 
                     JWTUtils.hash_token(token),
                     request.headers.get('host'),

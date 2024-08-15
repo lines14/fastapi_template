@@ -8,15 +8,12 @@ ENV PYTHONUNBUFFERED=1
 RUN apk update && apk add bash alpine-sdk gcc musl-dev python3-dev libffi-dev openssl-dev
 
 RUN addgroup -g 1000 mygroup && adduser -u 1000 -G mygroup -S myuser
-
 RUN chown -R myuser:mygroup /app
 
 ENV PATH=$PATH:/home/myuser/.local/bin
 
 COPY requirements.txt .
-
 RUN pip install --no-cache-dir -r requirements.txt
-
 RUN pip install "fastapi[standard]"
 
 COPY . .
@@ -25,8 +22,10 @@ RUN chmod -R 777 /app
 
 USER myuser
 
-RUN echo "alias migration='python database/migrations/generator.py'" >> ~/.bashrc
-
+RUN echo "alias migrate='python database/config/scripts/updater.py --migrate'" >> ~/.bashrc
+RUN echo "alias seed='python database/config/scripts/updater.py --seed'" >> ~/.bashrc
+RUN echo "alias migration='python database/config/scripts/generator.py --migration'" >> ~/.bashrc
+RUN echo "alias seeder='python database/config/scripts/generator.py --seeder'" >> ~/.bashrc
 RUN /bin/sh -c "source ../home/myuser/.bashrc"
 
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
