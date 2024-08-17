@@ -13,7 +13,9 @@ else:
     if seeder_name == 'all':
         seeders_list = [cls for name, cls in globals().items() if inspect.isclass(cls)]
         for seeder in seeders_list:
+            print(f'Run {seeder.__name__} seeder')
             seeder()
     else:
         seeder = globals().get(seeder_name)
+        print(f'Run {seeder.__name__} seeder')
         seeder()
