@@ -1,7 +1,7 @@
 """add user agent column to users
 
-Revision ID: 2024_08_10_002012
-Revises: 2024_08_10_001938
+Revision ID: _2024_08_10_002012
+Revises: _2024_08_10_001938
 Create Date: 2024-08-10 00:20:13.495069
 
 """
@@ -12,8 +12,8 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = '2024_08_10_002012'
-down_revision: Union[str, None] = '2024_08_10_001938'
+revision: str = '_2024_08_10_002012'
+down_revision: Union[str, None] = '_2024_08_10_001938'
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 

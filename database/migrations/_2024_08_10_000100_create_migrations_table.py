@@ -1,6 +1,6 @@
 """create migrations table
 
-Revision ID: 2024_08_10_000100
+Revision ID: _2024_08_10_000100
 Revises: 
 Create Date: 2024-08-10 00:01:01.356578
 
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = '2024_08_10_000100'
+revision: str = '_2024_08_10_000100'
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None

@@ -62,10 +62,15 @@ def get_migrations(dirname):
     migrations = {}
     for filename in os.listdir(dirname):
         if filename.endswith('.py'):
-            parts = filename[:-3].split('_', 4)
+            delimiter = '_'
+            first_delimiter_index = filename.find(delimiter)
+            second_delimiter_index = filename.find(delimiter, first_delimiter_index + 1)
+            first_part = filename[:second_delimiter_index]
+            second_part = filename[second_delimiter_index + 1:]
+            parts = [first_part] + second_part.split(delimiter, 3)
             if len(parts) >= 5:
-                version = '_'.join(parts[:4])
-                name = '_'.join(parts[4:])
+                version = '_'.join(parts[:4]).strip('_')
+                name = '_'.join(parts[4:]).strip('.py')
             else:
                 continue
             name = name.replace('_', ' ').strip()

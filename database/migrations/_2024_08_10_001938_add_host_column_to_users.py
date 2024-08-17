@@ -1,7 +1,7 @@
 """add host column to users
 
-Revision ID: 2024_08_10_001938
-Revises: 2024_08_10_000326
+Revision ID: _2024_08_10_001938
+Revises: _2024_08_10_000326
 Create Date: 2024-08-10 00:19:39.034658
 
 """
@@ -12,8 +12,8 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = '2024_08_10_001938'
-down_revision: Union[str, None] = '2024_08_10_000326'
+revision: str = '_2024_08_10_001938'
+down_revision: Union[str, None] = '_2024_08_10_000326'
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 

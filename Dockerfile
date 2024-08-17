@@ -28,6 +28,7 @@ RUN echo "alias downgrade='alembic downgrade base'" >> ~/.bashrc
 RUN echo "alias migrate:fresh='alembic downgrade base && alembic upgrade head'" >> ~/.bashrc
 RUN echo "alias seed='python database/config/seed.py'" >> ~/.bashrc
 RUN echo "alias migration='python database/config/create_migration.py'" >> ~/.bashrc
+RUN echo "alias seeder='python database/config/create_seeder.py'" >> ~/.bashrc
 RUN /bin/sh -c "source ../home/myuser/.bashrc"
 
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]

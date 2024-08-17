@@ -15,5 +15,5 @@ if len(sys.argv) < 2 or len(sys.argv) > 2:
     sys.exit(1)
 else:
     name = sys.argv[1]
-    version = datetime.now().strftime("%Y_%m_%d_%H%M%S")
+    version = datetime.now().strftime("_%Y_%m_%d_%H%M%S")
     create_migration(name, version)
