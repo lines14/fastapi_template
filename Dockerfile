@@ -2,6 +2,7 @@ FROM python:3.12-alpine
 
 WORKDIR /app
 
+ENV PYTHONPATH=/app
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 
@@ -23,6 +24,7 @@ RUN chmod -R 777 /app
 USER myuser
 
 RUN echo "alias migrate='alembic upgrade head'" >> ~/.bashrc
+RUN echo "alias downgrade='alembic downgrade base'" >> ~/.bashrc
 RUN echo "alias migrate:fresh='alembic downgrade base && alembic upgrade head'" >> ~/.bashrc
 RUN echo "alias seed='python database/config/seed.py'" >> ~/.bashrc
 RUN echo "alias migration='python database/config/create_migration.py'" >> ~/.bashrc

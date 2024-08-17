@@ -9,24 +9,23 @@ from database.database import Database
 from utils.response_utils import ResponseUtils
 from repositories.redis_repository import RedisRepository
 
-database = Database()
-redis_repository = RedisRepository()
-
 class AuthHandler:
     async def auth(self, request: Request) -> str:
+        database = Database()
+        redis_repository = RedisRepository()
         try:
             request_data = await request.json()
             if (request_data['login'] == getenv('USER_LOGIN') 
             and request_data['password'] == getenv('USER_PASSWORD')):
                 token = JWTUtils.generate_token(request_data['login'])
                 redis_repository.set_user(request_data['login'], token)
-                database.create(
-                    User,
-                    request_data['login'], 
-                    JWTUtils.hash_token(token),
-                    request.headers.get('host'),
-                    request.headers.get('user-agent')
+                user = User(
+                    login=request_data['login'], 
+                    token=JWTUtils.hash_token(token),
+                    host=request.headers.get('host'),
+                    user_agent=request.headers.get('user-agent')
                 )
+                database.create(user)
                 return await ResponseUtils.success("Success", token)
             else:
                 return await ResponseUtils.error(*DataUtils.responses.invalidCredentials)

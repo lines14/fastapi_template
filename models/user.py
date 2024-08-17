@@ -10,6 +10,3 @@ class User(Database.Base):
     user_agent = Column(String(255), nullable=False)
     token = Column(String(255), nullable=False)
     created_at = Column(DateTime, server_default=func.now(), nullable=False)
-
-    def __init__(self, *args):
-        self.login, self.token, self.host, self.user_agent = args

@@ -1,8 +1,8 @@
 import classutilities
 from os import getenv
 from sqlalchemy.orm import Session
-from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy import create_engine, inspect
 from sqlalchemy.ext.declarative import declarative_base
 
 class Database(classutilities.ClassPropertiesMixin):
@@ -21,6 +21,21 @@ class Database(classutilities.ClassPropertiesMixin):
     def base(self):
         return self.Base
 
-    def create(self, model, *args):
-        self.session.add(model(*args))
+    def seed(self, instances):
+        for index, instance in enumerate(instances):
+            instance.id = index + 1
+            self.create_or_update(instance)
+
+    def create_or_update(self, instance):
+        instance_properties = {attr.key: getattr(instance, attr.key) for attr in inspect(instance).mapper.column_attrs}
+        existing_record = self.session.query(type(instance)).order_by(type(instance).id).filter_by(id=instance.id).first()
+        if existing_record:
+            for attr, value in instance_properties.items():
+                setattr(existing_record, attr, value)
+        else:
+            self.session.add(instance)
+        self.session.commit()
+
+    def create(self, instance):
+        self.session.add(instance)
         self.session.commit()

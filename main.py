@@ -1,5 +1,4 @@
-import dotenv
-dotenv.load_dotenv()
+from dotenv import load_dotenv
 from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse
 from handlers.auth_handler import AuthHandler
@@ -7,6 +6,7 @@ from handlers.template_handler import TemplateHandler
 from middlewares.auth_middleware import AuthMiddleware
 from handlers.greetings_handler import GreetingsHandler
 
+load_dotenv()
 app = FastAPI(
     title='FastAPI template',
     docs_url='/docs',
