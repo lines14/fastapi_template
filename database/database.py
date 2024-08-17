@@ -28,7 +28,7 @@ class Database(classutilities.ClassPropertiesMixin):
 
     def create_or_update(self, instance):
         instance_properties = {attr.key: getattr(instance, attr.key) for attr in inspect(instance).mapper.column_attrs}
-        existing_record = self.session.query(type(instance)).order_by(type(instance).id).filter_by(id=instance.id).first()
+        existing_record = self.session.query(type(instance)).filter_by(id=instance.id).first()
         if existing_record:
             for attr, value in instance_properties.items():
                 setattr(existing_record, attr, value)
@@ -39,3 +39,11 @@ class Database(classutilities.ClassPropertiesMixin):
     def create(self, instance):
         self.session.add(instance)
         self.session.commit()
+
+    def get(self, instance):
+        instance_properties = {attr.key: getattr(instance, attr.key) for attr in inspect(instance).mapper.column_attrs}
+        instance_properties = {key: value for key, value in instance_properties.items() if value is not None}
+        filter_expressions = [getattr(type(instance), key) == value for key, value in instance_properties.items()]
+        result = self.session.query(type(instance)).filter(*filter_expressions).first()
+        self.session.commit()
+        return result
