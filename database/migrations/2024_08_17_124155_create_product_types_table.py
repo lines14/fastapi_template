@@ -27,5 +27,4 @@ def upgrade() -> None:
 
 
 def downgrade() -> None:
-    op.drop_index(op.f('ix_product_types_type'), table_name='product_types')
     op.drop_table('product_types')
