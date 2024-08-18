@@ -9,5 +9,7 @@ class ProductGroups():
         database.seed([
             ProductGroup(group='Продукты'),
             ProductGroup(group='Бытовые товары'),
-            ProductGroup(group='Электроника')
+            ProductGroup(group='Электроника'),
+            ProductGroup(group='Одежда'),
+            ProductGroup(group='Услуги')
         ])

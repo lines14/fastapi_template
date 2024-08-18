@@ -9,5 +9,7 @@ class ProductTypes():
         database.seed([
             ProductType(group=database.get(ProductGroup(group='Продукты')).id, type='Овощи'),
             ProductType(group=database.get(ProductGroup(group='Продукты')).id, type='Фрукты'),
-            ProductType(group=database.get(ProductGroup(group='Продукты')).id, type='Молочные продукты')
+            ProductType(group=database.get(ProductGroup(group='Продукты')).id, type='Молочные продукты'),
+            ProductType(group=database.get(ProductGroup(group='Продукты')).id, type='Мясные продукты'),
+            ProductType(group=database.get(ProductGroup(group='Продукты')).id, type='Бакалея')
         ])

@@ -26,4 +26,4 @@ class {class_name}():
         file.write(content)
 
     with open(os.path.join(cwd, 'database/seeders/__init__.py'), 'a') as file:
-        file.write(f'from .{version}_{file_name} import {class_name}\n')
+        file.write(f'\nfrom .{version}_{file_name} import {class_name}')

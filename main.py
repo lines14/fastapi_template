@@ -30,3 +30,8 @@ async def auth(request: Request) -> str:
 @auth_middleware.check_bearer_token
 async def greetings(request: Request) -> str:
     return await greetings_handler.greetings(request)
+
+# @app.post('/create')
+# @auth_middleware.check_bearer_token
+# async def post(request: Request) -> str:
+#     return await example_handler.post(request)
