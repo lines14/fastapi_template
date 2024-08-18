@@ -3,7 +3,7 @@ FROM python:3.12-alpine
 WORKDIR /app
 
 ENV PYTHONPATH=/app
-ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONDONTWRITEBYTECODE=abc
 ENV PYTHONUNBUFFERED=1
 
 RUN apk update && apk add bash alpine-sdk gcc musl-dev python3-dev libffi-dev openssl-dev
