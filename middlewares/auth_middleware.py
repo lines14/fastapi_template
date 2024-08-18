@@ -1,3 +1,4 @@
+import json
 from functools import wraps
 from typing import Callable, Any
 from utils.JWT_utils import JWTUtils
@@ -17,12 +18,16 @@ class AuthMiddleware:
                     payload = JWTUtils.verify_token(token)
                     redis_repository = RedisRepository()
                     savedToken = redis_repository.get_user(payload['login'])
-                    if token == savedToken:
+                    if savedToken and token == savedToken.decode('utf-8'):
                         return await function(request, *args, **kwargs)
                     else:
                         return await ResponseUtils.error(*DataUtils.responses.unauthorized)
                 except Exception as e:
-                    return await ResponseUtils.error(str(e))
+                    try:
+                        error_response = json.loads(str(e))
+                        return await ResponseUtils.error(*error_response)
+                    except:
+                        return await ResponseUtils.error(str(e))
             else:
                 return await ResponseUtils.error(*DataUtils.responses.unauthorized)
         return wrapper

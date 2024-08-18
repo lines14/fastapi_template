@@ -1,6 +1,9 @@
 import jwt
+import json
 import bcrypt
 import datetime
+from os import getenv
+from utils.data_utils import DataUtils
 from utils.storage_utils import StorageUtils
 from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.backends import default_backend
@@ -16,7 +19,7 @@ class JWTUtils:
     def generate_token(login: int) -> str:
         payload = {
             'login': login,
-            'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=1)
+            'exp': datetime.datetime.utcnow() + datetime.timedelta(seconds=int(getenv('TTL')))
         }
 
         token = jwt.encode(payload, PRIVATE_KEY, algorithm=ALGORITHM)
@@ -28,7 +31,7 @@ class JWTUtils:
             payload = jwt.decode(token, cls.__parse_public_key(PUBLIC_KEY), algorithms=[ALGORITHM])
             return payload
         except jwt.ExpiredSignatureError as e:
-            raise e
+            raise jwt.ExpiredSignatureError(json.dumps(DataUtils.responses.unauthorized))
         except jwt.InvalidTokenError as e:
             raise e
 
