@@ -8,7 +8,7 @@ from handlers.greetings_handler import GreetingsHandler
 
 load_dotenv()
 app = FastAPI(
-    title='FastAPI template',
+    title='Spending tracker API',
     docs_url='/docs',
     root_path='/api'
 )

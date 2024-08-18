@@ -10,7 +10,7 @@ services:
       - redis_data:/data
     command: ["redis-server", "--requirepass", "${REDIS_PASSWORD}"]
     networks:
-      - fastapi-network
+      - spending-tracker-network
 
   mysql:
     image: "mysql:latest"
@@ -25,13 +25,13 @@ services:
     volumes:
       - mysql_data:/var/lib/mysql
     networks:
-      - fastapi-network
+      - spending-tracker-network
 
-  fastapi_template:
+  spending_tracker_api:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: fastapi_template
+    container_name: spending_tracker_api
     restart: unless-stopped
     ports:
       - "8000:8000"
@@ -44,12 +44,12 @@ services:
       - redis
       - mysql
     networks:
-      - fastapi-network
+      - spending-tracker-network
 
 volumes:
   redis_data:
   mysql_data:
 
 networks:
-  fastapi-network:
+  spending-tracker-network:
     driver: bridge
