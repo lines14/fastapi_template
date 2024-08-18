@@ -8,8 +8,12 @@ class ProductTypes():
         database = Database()
         database.seed([
             ProductType(group=database.get(ProductGroup(group='Продукты')).id, type='Овощи'),
-            ProductType(group=database.get(ProductGroup(group='Продукты')).id, type='Фрукты'),
+            ProductType(group=database.get(ProductGroup(group='Продукты')).id, type='Фрукты и ягоды'),
             ProductType(group=database.get(ProductGroup(group='Продукты')).id, type='Молочные продукты'),
             ProductType(group=database.get(ProductGroup(group='Продукты')).id, type='Мясные продукты'),
-            ProductType(group=database.get(ProductGroup(group='Продукты')).id, type='Бакалея')
+            ProductType(group=database.get(ProductGroup(group='Продукты')).id, type='Замороженные продукты'),
+            ProductType(group=database.get(ProductGroup(group='Продукты')).id, type='Бакалея'),
+            ProductType(group=database.get(ProductGroup(group='Продукты')).id, type='Алкогольные напитки'),
+            ProductType(group=database.get(ProductGroup(group='Бытовые товары')).id, type='Личная гигиена'),
+            ProductType(group=database.get(ProductGroup(group='Бытовые товары')).id, type='Уборка')
         ])
