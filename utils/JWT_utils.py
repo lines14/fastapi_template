@@ -1,9 +1,9 @@
 import jwt
 import json
 import bcrypt
-import datetime
 from os import getenv
 from utils.data_utils import DataUtils
+from datetime import datetime, timedelta
 from utils.storage_utils import StorageUtils
 from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.backends import default_backend
@@ -19,7 +19,7 @@ class JWTUtils:
     def generate_token(login: int) -> str:
         payload = {
             'login': login,
-            'exp': datetime.datetime.utcnow() + datetime.timedelta(seconds=int(getenv('TTL')))
+            'exp': datetime.utcnow() + timedelta(seconds=int(getenv('TTL')))
         }
 
         token = jwt.encode(payload, PRIVATE_KEY, algorithm=ALGORITHM)
