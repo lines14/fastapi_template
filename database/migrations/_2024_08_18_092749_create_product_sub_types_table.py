@@ -22,13 +22,13 @@ def upgrade() -> None:
     op.create_table('product_sub_types',
     sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
     sa.Column('sub_type', sa.String(length=255), nullable=False),
-    sa.Column('type', sa.Integer(), nullable=False),
+    sa.Column('type_id', sa.Integer(), nullable=False),
     sa.Column('created_at', sa.DateTime(), server_default=sa.text('now()'), nullable=False),
     sa.PrimaryKeyConstraint('id')
     )
-    op.create_index(op.f('ix_product_sub_types_type'), 'product_sub_types', ['type'], unique=False)
+    op.create_index(op.f('ix_product_sub_types_type_id'), 'product_sub_types', ['type_id'], unique=False)
 
 
 def downgrade() -> None:
-    op.drop_index(op.f('ix_product_sub_types_type'), table_name='product_sub_types')
+    op.drop_index(op.f('ix_product_sub_types_type_id'), table_name='product_sub_types')
     op.drop_table('product_sub_types')

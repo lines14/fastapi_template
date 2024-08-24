@@ -10,6 +10,6 @@ class CurrenciesService(HTTPClient):
         )
 
     async def get_rates(self):
-        params = DataUtils.params
+        params = DataUtils.obj_template
         params.fdate = datetime.now().strftime('%d.%m.%Y')
         return await self.get('/rss/get_rates.cfm', vars(params))

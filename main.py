@@ -22,7 +22,7 @@ template_handler = TemplateHandler()
 greetings_handler = GreetingsHandler()
 currencies_updater = CurrenciesUpdater()
 
-aioschedule.every().minute.do(currencies_updater.update())
+# aioschedule.every(1).minute.do(currencies_updater.update)
 
 @app.get("/", response_class=HTMLResponse)
 async def template(request: Request) -> str:

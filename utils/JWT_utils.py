@@ -11,7 +11,7 @@ from cryptography.hazmat.backends import default_backend
 class JWTUtils:
     @staticmethod
     def generate_token(login: int) -> str:
-        payload = DataUtils.params
+        payload = DataUtils.obj_template
         payload.login = login
         payload.exp = datetime.utcnow() + timedelta(seconds=int(getenv('TTL')))
         return jwt.encode(vars(payload), StorageUtils.private_key, algorithm=getenv('ALGORITHM'))

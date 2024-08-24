@@ -6,7 +6,7 @@ from utils.data_utils import DataUtils
 class ResponseUtils:
     @staticmethod
     async def success(msg: str, data: Any = '', status_code: int = 200) -> Response:
-        content = DataUtils.params
+        content = DataUtils.obj_template
         content.status = True
         content.message = msg
         content.data = data
@@ -19,7 +19,7 @@ class ResponseUtils:
 
     @staticmethod
     async def error(msg: str, data: Any = '', status_code: int = 400) -> Response:
-        content = DataUtils.params
+        content = DataUtils.obj_template
         content.status = False
         content.message = msg
         content.data = data

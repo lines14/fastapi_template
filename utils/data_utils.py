@@ -5,7 +5,7 @@ os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 class DataUtils(classutilities.ClassPropertiesMixin):
     @classutilities.classproperty
-    def params(cls):
+    def obj_template(cls):
         return type('', (object,), {})()
 
     @classutilities.classproperty

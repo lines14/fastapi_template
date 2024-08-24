@@ -5,7 +5,7 @@ from fastapi.templating import Jinja2Templates
 
 class TemplateHandler:
     async def template(self, request: Request) -> str:
-        data = DataUtils.params
+        data = DataUtils.obj_template
         data.request = request
         data.pythonVersion = version
         data.fastapiVersion = __version__

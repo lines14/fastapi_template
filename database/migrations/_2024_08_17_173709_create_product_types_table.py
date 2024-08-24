@@ -22,13 +22,13 @@ def upgrade() -> None:
     op.create_table('product_types',
     sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
     sa.Column('type', sa.String(length=255), nullable=False),
-    sa.Column('group', sa.Integer(), nullable=False),
+    sa.Column('group_id', sa.Integer(), nullable=False),
     sa.Column('created_at', sa.DateTime(), server_default=sa.text('now()'), nullable=False),
     sa.PrimaryKeyConstraint('id')
     )
-    op.create_index(op.f('ix_product_types_group'), 'product_types', ['group'], unique=False)
+    op.create_index(op.f('ix_product_types_group_id'), 'product_types', ['group_id'], unique=False)
 
 
 def downgrade() -> None:
-    op.drop_index(op.f('ix_product_types_group'), table_name='product_types')
+    op.drop_index(op.f('ix_product_types_group_id'), table_name='product_types')
     op.drop_table('product_types')

@@ -69,7 +69,7 @@ def get_migrations(dirname):
             second_part = filename[second_delimiter_index + 1:]
             parts = [first_part] + second_part.split(delimiter, 3)
             if len(parts) >= 5:
-                version = '_'.join(parts[:4]).strip('_')
+                version = '_'.join(parts[:4])
                 name = '_'.join(parts[4:]).strip('.py')
             else:
                 continue
