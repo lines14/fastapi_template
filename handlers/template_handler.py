@@ -1,10 +1,11 @@
 from sys import version
+from utils.data_utils import DataUtils
 from fastapi import Request, __version__
 from fastapi.templating import Jinja2Templates
 
 class TemplateHandler:
     async def template(self, request: Request) -> str:
-        data = type('', (object,), {})()
+        data = DataUtils.params
         data.request = request
         data.pythonVersion = version
         data.fastapiVersion = __version__

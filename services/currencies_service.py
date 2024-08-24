@@ -1,5 +1,6 @@
 from os import getenv
 from datetime import datetime
+from utils.data_utils import DataUtils
 from services.base.HTTP_client import HTTPClient
 
 class CurrenciesService(HTTPClient):
@@ -9,6 +10,6 @@ class CurrenciesService(HTTPClient):
         )
 
     async def get_rates(self):
-        params = type('', (object,), {})()
+        params = DataUtils.params
         params.fdate = datetime.now().strftime('%d.%m.%Y')
         return await self.get('/rss/get_rates.cfm', vars(params))
