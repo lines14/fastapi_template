@@ -12,6 +12,7 @@ else:
     class_name = ''.join([word.capitalize() for word in name.split()])
     version = datetime.now().strftime("_%Y_%m_%d_%H%M%S")
     print(f'  Generating /app/database/seeders/{version}_{file_name}.py ...  done')
+
     content = f"""from database.database import Database\n
 class {class_name}():
     revision: str = '{version}'\n
@@ -24,6 +25,5 @@ class {class_name}():
 
     with open(os.path.join(cwd, 'database/seeders', version + '_' + file_name + '.py'), 'w') as file:
         file.write(content)
-
     with open(os.path.join(cwd, 'database/seeders/__init__.py'), 'a') as file:
         file.write(f'\nfrom .{version}_{file_name} import {class_name}')
