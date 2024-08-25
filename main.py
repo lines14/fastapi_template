@@ -19,7 +19,7 @@ greetings_handler = GreetingsHandler()
 currency_rates_updater = CurrencyRatesUpdater()
 
 async def start_scheduler():
-    aioschedule.every().hour.do(currency_rates_updater.update)
+    aioschedule.every().hour.at(":10").do(currency_rates_updater.update)
     while True:
         await aioschedule.run_pending()
         await asyncio.sleep(1)
