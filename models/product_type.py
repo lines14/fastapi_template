@@ -8,3 +8,4 @@ class ProductType(Database.Base):
     type = Column(String(255), nullable=False)
     group_id = Column(Integer, index=True, nullable=False)
     created_at = Column(DateTime, server_default=func.now(), nullable=False)
+    updated_at = Column(DateTime, server_default=func.now(), nullable=False)

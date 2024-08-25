@@ -7,3 +7,4 @@ class ProductGroup(Database.Base):
     id = Column(Integer, primary_key=True, autoincrement=True, nullable=False)
     group = Column(String(255), nullable=False)
     created_at = Column(DateTime, server_default=func.now(), nullable=False)
+    updated_at = Column(DateTime, server_default=func.now(), nullable=False)

@@ -10,3 +10,4 @@ class User(Database.Base):
     user_agent = Column(String(255), nullable=False)
     token = Column(String(255), nullable=False)
     created_at = Column(DateTime, server_default=func.now(), nullable=False)
+    updated_at = Column(DateTime, server_default=func.now(), nullable=False)

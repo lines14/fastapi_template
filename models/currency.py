@@ -7,3 +7,4 @@ class Currency(Database.Base):
     id = Column(Integer, primary_key=True, autoincrement=True, nullable=False)
     currency = Column(String(255), nullable=False, index=True)
     created_at = Column(DateTime, server_default=func.now(), nullable=False)
+    updated_at = Column(DateTime, server_default=func.now(), nullable=False)

@@ -8,3 +8,4 @@ class ProductSubType(Database.Base):
     sub_type = Column(String(255), nullable=False)
     type_id = Column(Integer, index=True, nullable=False)
     created_at = Column(DateTime, server_default=func.now(), nullable=False)
+    updated_at = Column(DateTime, server_default=func.now(), nullable=False)
