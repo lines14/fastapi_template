@@ -1,8 +1,14 @@
+import os
+import sys
+sys.path.append(os.getcwd())
+from dotenv import load_dotenv
 import xml.etree.ElementTree as ET
 from utils.data_utils import DataUtils
 from database.database import Database
 from models import Currency, CurrencyRate
 from services.currencies_service import CurrenciesService
+
+load_dotenv()
 
 class CurrencyRatesUpdater:
     async def update(self) -> None:
@@ -25,3 +31,4 @@ class CurrencyRatesUpdater:
             CurrencyRate(currency_id=database.get(Currency(currency='KZT')).id, rate=1),
             *currency_rates_models
         ])
+        print(f'INFO Successfully updated currency rates')
