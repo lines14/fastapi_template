@@ -52,3 +52,8 @@ class Database(classutilities.ClassPropertiesMixin):
         result = self.session.query(type(instance)).filter(*filter_expressions).first()
         self.session.commit()
         return result
+    
+    def get_all(self, instance):
+        result = self.session.query(instance).all()
+        self.session.commit()
+        return result
