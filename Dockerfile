@@ -28,7 +28,8 @@ RUN echo "alias migrate:fresh='alembic downgrade base && alembic upgrade head'" 
 RUN echo "alias seed='python database/config/seed.py'" >> ~/.bashrc
 RUN echo "alias migration='python database/config/create_migration.py'" >> ~/.bashrc
 RUN echo "alias seeder='python database/config/create_seeder.py'" >> ~/.bashrc
-RUN echo 'alias currencies:update="python -c \"import asyncio; from scheduler.currency_rates_updater import CurrencyRatesUpdater; \
+RUN echo 'alias currencies:update="python -c \"import asyncio; \
+from scheduler.currency_rates_updater import CurrencyRatesUpdater; \
 currency_rates_updater = CurrencyRatesUpdater(); \
 asyncio.run(currency_rates_updater.update())\""' >> ~/.bashrc
 
