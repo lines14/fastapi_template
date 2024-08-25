@@ -8,7 +8,7 @@ from handlers.auth_handler import AuthHandler
 from handlers.template_handler import TemplateHandler
 from middlewares.auth_middleware import AuthMiddleware
 from handlers.greetings_handler import GreetingsHandler
-from scheduler.currencies_updater import CurrenciesUpdater
+from scheduler.currency_rates_updater import CurrencyRatesUpdater
 
 load_dotenv()
 
@@ -16,10 +16,10 @@ auth_handler = AuthHandler()
 auth_middleware = AuthMiddleware()
 template_handler = TemplateHandler()
 greetings_handler = GreetingsHandler()
-currencies_updater = CurrenciesUpdater()
+currency_rates_updater = CurrencyRatesUpdater()
 
 async def start_scheduler():
-    aioschedule.every().hour.do(currencies_updater.update)
+    aioschedule.every().hour.do(currency_rates_updater.update)
     while True:
         await aioschedule.run_pending()
         await asyncio.sleep(1)
