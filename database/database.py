@@ -1,5 +1,6 @@
 import classutilities
 from os import getenv
+from datetime import datetime
 from sqlalchemy.orm import Session
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import create_engine, inspect
@@ -37,6 +38,7 @@ class Database(classutilities.ClassPropertiesMixin):
         if existing_record:
             for attr, value in properties_for_update.items():
                 setattr(existing_record, attr, value)
+            setattr(existing_record, 'updated_at', datetime.utcnow())
         else:
             self.session.add(instance)
         self.session.commit()
