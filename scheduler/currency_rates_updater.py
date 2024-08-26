@@ -31,4 +31,4 @@ class CurrencyRatesUpdater:
             CurrencyRate(currency_id=database.get(Currency(currency='KZT')).id, rate=1),
             *currency_rates_models
         ])
-        print(f'INFO Successfully updated currency rates')
+        print(f'INFO:     Successfully updated currency rates')
