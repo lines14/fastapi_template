@@ -7,13 +7,13 @@ class ProductTypes():
     def __init__(self):
         database = Database()
         database.seed([
-            ProductType(group_id=database.get(ProductGroup(group='Продукты')).id, type='Овощи'),
-            ProductType(group_id=database.get(ProductGroup(group='Продукты')).id, type='Фрукты и ягоды'),
-            ProductType(group_id=database.get(ProductGroup(group='Продукты')).id, type='Молочные продукты'),
-            ProductType(group_id=database.get(ProductGroup(group='Продукты')).id, type='Мясные продукты'),
-            ProductType(group_id=database.get(ProductGroup(group='Продукты')).id, type='Замороженные продукты'),
-            ProductType(group_id=database.get(ProductGroup(group='Продукты')).id, type='Бакалея'),
-            ProductType(group_id=database.get(ProductGroup(group='Продукты')).id, type='Алкогольные напитки'),
-            ProductType(group_id=database.get(ProductGroup(group='Бытовые товары')).id, type='Личная гигиена'),
-            ProductType(group_id=database.get(ProductGroup(group='Бытовые товары')).id, type='Уборка')
+            ProductType(group_id=ProductGroup(group='Продукты').get().id, type='Овощи'),
+            ProductType(group_id=ProductGroup(group='Продукты').get().id, type='Фрукты и ягоды'),
+            ProductType(group_id=ProductGroup(group='Продукты').get().id, type='Молочные продукты'),
+            ProductType(group_id=ProductGroup(group='Продукты').get().id, type='Мясные продукты'),
+            ProductType(group_id=ProductGroup(group='Продукты').get().id, type='Замороженные продукты'),
+            ProductType(group_id=ProductGroup(group='Продукты').get().id, type='Бакалея'),
+            ProductType(group_id=ProductGroup(group='Продукты').get().id, type='Алкогольные напитки'),
+            ProductType(group_id=ProductGroup(group='Бытовые товары').get().id, type='Личная гигиена'),
+            ProductType(group_id=ProductGroup(group='Бытовые товары').get().id, type='Уборка')
         ])
