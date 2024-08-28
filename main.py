@@ -8,6 +8,7 @@ from handlers.auth_handler import AuthHandler
 from handlers.template_handler import TemplateHandler
 from middlewares.auth_middleware import AuthMiddleware
 from handlers.greetings_handler import GreetingsHandler
+from handlers.registration_handler import RegistrationHandler
 from scheduler.currency_rates_updater import CurrencyRatesUpdater
 
 load_dotenv()
@@ -16,6 +17,7 @@ auth_handler = AuthHandler()
 auth_middleware = AuthMiddleware()
 template_handler = TemplateHandler()
 greetings_handler = GreetingsHandler()
+registration_handler = RegistrationHandler()
 currency_rates_updater = CurrencyRatesUpdater()
 
 async def start_scheduler():
@@ -40,6 +42,10 @@ app = FastAPI(
 async def template(request: Request) -> str:
     return await template_handler.template(request)
 
+@app.post('/registration')
+async def registration(request: Request) -> str:
+    return await registration_handler.registration(request)
+
 @app.post('/auth')
 async def auth(request: Request) -> str:
     return await auth_handler.auth(request)
@@ -48,8 +54,3 @@ async def auth(request: Request) -> str:
 @auth_middleware.check_bearer_token
 async def greetings(request: Request) -> str:
     return await greetings_handler.greetings(request)
-
-# @app.post('/create')
-# @auth_middleware.check_bearer_token
-# async def post(request: Request) -> str:
-#     return await example_handler.post(request)

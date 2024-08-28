@@ -12,7 +12,7 @@ class Session(Database.Base):
     created_at = Column(DateTime, server_default=func.now(), nullable=False)
     updated_at = Column(DateTime, server_default=func.now(), nullable=False)
 
-    def __init__(self, login, host, user_agent, token):
+    def __init__(self, login=None, host=None, user_agent=None, token=None):
         self.db = Database()
         self.login = login
         self.host = host

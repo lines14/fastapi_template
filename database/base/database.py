@@ -1,9 +1,8 @@
 import classutilities
 from os import getenv
 from datetime import datetime
-from sqlalchemy.orm import Session
-from sqlalchemy.orm import sessionmaker
 from sqlalchemy import create_engine, inspect
+from sqlalchemy.orm import Session, sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 
 class Database(classutilities.ClassPropertiesMixin):
@@ -51,11 +50,7 @@ class Database(classutilities.ClassPropertiesMixin):
         instance_properties = {attr.key: getattr(instance, attr.key) for attr in inspect(instance).mapper.column_attrs}
         instance_properties = {key: value for key, value in instance_properties.items() if value is not None}
         filter_expressions = [getattr(type(instance), key) == value for key, value in instance_properties.items()]
-        result = self.session.query(type(instance)).filter(*filter_expressions).first()
-        self.session.commit()
-        return result
+        return self.session.query(type(instance)).filter(*filter_expressions).first()
     
     def get_all(self, instance):
-        result = self.session.query(instance).all()
-        self.session.commit()
-        return result
+        return self.session.query(instance).all()

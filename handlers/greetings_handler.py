@@ -11,11 +11,3 @@ class GreetingsHandler:
         except Exception as e:
             Logger.log(traceback.format_exc())
             return await ResponseUtils.error(str(e))
-        
-    # async def post(self, request: Request) -> str:
-    #     try:
-    #         data = await request.json()
-    #         return await ResponseUtils.success("Success", data)
-    #     except Exception as e:
-    #         Logger.log(traceback.format_exc())
-    #         return await ResponseUtils.error(str(e))

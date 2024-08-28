@@ -10,10 +10,13 @@ class User(Database.Base):
     created_at = Column(DateTime, server_default=func.now(), nullable=False)
     updated_at = Column(DateTime, server_default=func.now(), nullable=False)
 
-    def __init__(self, login, password):
+    def __init__(self, login=None, password=None):
         self.db = Database()
         self.login = login
         self.password = password
 
     def create(self):
         self.db.create(self)
+
+    def get(self):
+        return self.db.get(self)
