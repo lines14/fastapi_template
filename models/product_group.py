@@ -1,5 +1,5 @@
 from sqlalchemy.sql import func
-from database.database import Database
+from database.base.database import Database
 from sqlalchemy import Column, Integer, String, DateTime
 
 class ProductGroup(Database.Base):

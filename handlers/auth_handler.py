@@ -5,13 +5,11 @@ from fastapi import Request
 from utils.logger import Logger
 from utils.JWT_utils import JWTUtils
 from utils.data_utils import DataUtils
-from database.database import Database
 from utils.response_utils import ResponseUtils
 from repositories.redis_repository import RedisRepository
 
 class AuthHandler:
     async def auth(self, request: Request) -> str:
-        database = Database()
         redis_repository = RedisRepository()
         try:
             request_data = await request.json()
@@ -25,7 +23,7 @@ class AuthHandler:
                     host=request.headers.get('host'),
                     user_agent=request.headers.get('user-agent')
                 )
-                database.create(user)
+                user.create()
                 return await ResponseUtils.success("Success", token)
             else:
                 return await ResponseUtils.error(*DataUtils.responses.invalidCredentials)

@@ -1,5 +1,5 @@
 from models import Currency
-from database.database import Database
+from database.base.database import Database
 
 class Currencies():
     revision: str = '_2024_08_18_103405'

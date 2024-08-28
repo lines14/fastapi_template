@@ -4,8 +4,8 @@ sys.path.append(os.getcwd())
 from dotenv import load_dotenv
 import xml.etree.ElementTree as ET
 from utils.data_utils import DataUtils
-from database.database import Database
 from models import Currency, CurrencyRate
+from database.base.database import Database
 from services.currencies_service import CurrenciesService
 
 load_dotenv()
@@ -13,7 +13,6 @@ load_dotenv()
 class CurrencyRatesUpdater:
     async def update(self) -> None:
         currency_rates = []
-        database = Database()
         currencies_service = CurrenciesService()
         response = await currencies_service.get_rates()
         root = ET.fromstring(response.text)
@@ -27,6 +26,7 @@ class CurrencyRatesUpdater:
         currency_rates = sorted(currency_rates, key=lambda currency_rate: titles.index(currency_rate.title))
         currency_rates_models = list(map(lambda currency_rate: CurrencyRate(currency_id=database
                             .get(Currency(currency=currency_rate.title)).id, rate=currency_rate.rate), currency_rates))
+        database = Database()
         database.seed([
             CurrencyRate(currency_id=database.get(Currency(currency='KZT')).id, rate=1),
             *currency_rates_models

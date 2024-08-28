@@ -1,5 +1,5 @@
 from models import ProductGroup
-from database.database import Database
+from database.base.database import Database
 
 class ProductGroups():
     revision: str = '_2024_08_17_215610'

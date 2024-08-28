@@ -1,5 +1,5 @@
 from sqlalchemy.sql import func
-from database.database import Database
+from database.base.database import Database
 from sqlalchemy import Column, Integer, String, DateTime
 
 class User(Database.Base):
@@ -11,3 +11,13 @@ class User(Database.Base):
     token = Column(String(255), nullable=False)
     created_at = Column(DateTime, server_default=func.now(), nullable=False)
     updated_at = Column(DateTime, server_default=func.now(), nullable=False)
+
+    def __init__(self, login, host, user_agent, token):
+        self.db = Database()
+        self.login = login
+        self.host = host
+        self.user_agent = user_agent
+        self.token = token
+
+    def create(self):
+        self.db.create(self)

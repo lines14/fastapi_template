@@ -1,4 +1,4 @@
-from database.database import Database
+from database.base.database import Database
 from models import ProductType, ProductSubType
 
 class ProductSubTypes():
