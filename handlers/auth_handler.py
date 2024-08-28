@@ -1,6 +1,6 @@
 import traceback
 from os import getenv
-from models import User
+from models import Session
 from fastapi import Request
 from utils.logger import Logger
 from utils.JWT_utils import JWTUtils
@@ -17,13 +17,13 @@ class AuthHandler:
             and request_data['password'] == getenv('USER_PASSWORD')):
                 token = JWTUtils.generate_token(request_data['login'])
                 redis_repository.set_user(request_data['login'], token)
-                user = User(
+                session = Session(
                     login=request_data['login'], 
                     token=JWTUtils.hash_token(token),
                     host=request.headers.get('host'),
                     user_agent=request.headers.get('user-agent')
                 )
-                user.create()
+                session.create()
                 return await ResponseUtils.success("Success", token)
             else:
                 return await ResponseUtils.error(*DataUtils.responses.invalidCredentials)
