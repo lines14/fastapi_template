@@ -1,10 +1,12 @@
 import json
+from models import Session
 from functools import wraps
 from typing import Callable, Any
 from utils.JWT_utils import JWTUtils
 from fastapi import Request, Response
 from utils.data_utils import DataUtils
 from utils.response_utils import ResponseUtils
+from utils.cryptography_utils import CryptographyUtils
 from repositories.redis_repository import RedisRepository
 
 class AuthMiddleware:
@@ -18,7 +20,8 @@ class AuthMiddleware:
                     payload = JWTUtils.verify_token(token)
                     redis_repository = RedisRepository()
                     savedToken = redis_repository.get_user(payload['login'])
-                    if savedToken and token == savedToken.decode('utf-8'):
+                    user = Session(login=payload['login']).get()
+                    if savedToken and user and token == savedToken.decode('utf-8') and CryptographyUtils.verify_string(token, user.token):
                         return await function(request, *args, **kwargs)
                     else:
                         return await ResponseUtils.error(*DataUtils.responses.unauthorized)

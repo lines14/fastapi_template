@@ -21,3 +21,6 @@ class Session(Database.Base):
 
     def create(self):
         self.db.create(self)
+
+    def get(self):
+        return self.db.get(self)

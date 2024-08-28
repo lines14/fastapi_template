@@ -28,9 +28,9 @@ class AuthHandler:
                     session.create()
                     return await ResponseUtils.success("Success", token)
                 else:
-                    return await ResponseUtils.error(*DataUtils.responses.invalidCredentials)
+                    return await ResponseUtils.error(*DataUtils.responses.invalid_credentials)
             else:
-                return await ResponseUtils.error(*DataUtils.responses.invalidCredentials)
+                return await ResponseUtils.error(*DataUtils.responses.invalid_credentials)
         except Exception as e:
             Logger.log(traceback.format_exc())
             return await ResponseUtils.error(str(e))
