@@ -10,9 +10,9 @@ class ProductType(Database):
     updated_at = Column(DateTime, server_default=func.now(), nullable=False)
 
     def __init__(self, type=None, group_id=None):
-        self.db = Database()
         self.type = type
         self.group_id = group_id
 
     async def get(self):
-        return await self.db.get(self)
+        async with Database() as database:
+            return await database.get(self)

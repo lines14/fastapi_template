@@ -1,5 +1,4 @@
 import re
-import asyncio
 from config import Config
 from typing import Annotated
 from datetime import datetime
@@ -20,24 +19,25 @@ class Database(AsyncAttrs, DeclarativeBase):
     updated_at = Annotated[datetime, mapped_column(server_default=func.now(), onupdate=datetime.now)]
 
     def __init__(self):
-        engine = create_async_engine(Config().DB_URL)
+        self.engine = create_async_engine(Config().DB_URL)
         self.session: AsyncSession = async_sessionmaker(
-            bind=engine, 
+            bind=self.engine, 
             expire_on_commit=False, 
             autocommit=False, 
             autoflush=False
         )
-        async def create_tables():
-            async with engine.begin() as connection:
-                await connection.run_sync(self.metadata.create_all)
-        asyncio.create_task(create_tables())
+
+    async def init_tables(self):
+        async with self.engine.begin() as connection:
+            await connection.run_sync(self.metadata.create_all)
 
     async def __aenter__(self):
         self.session = self.session()
+        await self.init_tables()
         return self
 
     async def __aexit__(self, exc_type, exc_val, exc_tb):
-        await self.session.close()
+        await self.engine.dispose()
 
     @declared_attr.directive
     def __tablename__(cls) -> str:

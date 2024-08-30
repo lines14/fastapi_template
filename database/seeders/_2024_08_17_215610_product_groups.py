@@ -7,11 +7,12 @@ class ProductGroups():
 
     def __init__(self):
         async def seed():
-            await Database().seed([
-                ProductGroup(group='Продукты'),
-                ProductGroup(group='Бытовые товары'),
-                ProductGroup(group='Электроника'),
-                ProductGroup(group='Одежда'),
-                ProductGroup(group='Услуги')
-            ])
+            async with Database() as database:
+                await database.seed([
+                    ProductGroup(group='Продукты'),
+                    ProductGroup(group='Бытовые товары'),
+                    ProductGroup(group='Электроника'),
+                    ProductGroup(group='Одежда'),
+                    ProductGroup(group='Услуги')
+                ])
         asyncio.create_task(seed())

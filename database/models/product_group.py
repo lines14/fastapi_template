@@ -9,8 +9,8 @@ class ProductGroup(Database):
     updated_at = Column(DateTime, server_default=func.now(), nullable=False)
 
     def __init__(self, group=None):
-        self.db = Database()
         self.group = group
 
     async def get(self):
-        return await self.db.get(self)
+        async with Database() as database:
+            return await database.get(self)
