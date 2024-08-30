@@ -2,7 +2,7 @@ import os
 import classutilities
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
-class StorageUtils(classutilities.ClassPropertiesMixin):
+class StorageUtils():
     @classutilities.classproperty
     def private_key(cls) -> str:
         with open('../storage/JWT/private.pem') as file:

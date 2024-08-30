@@ -14,7 +14,7 @@ class AuthHandler:
         try:
             request_data = await request.json()
             if request_data['login'] and request_data['password']:
-                user = User(login=request_data['login']).get()
+                user = await User(login=request_data['login']).get()
                 if user and CryptographyUtils.verify_string(request_data['password'], user.password):
                     token = JWTUtils.generate_token(request_data['login'])
                     redis_repository.set_user(request_data['login'], token)
@@ -24,7 +24,7 @@ class AuthHandler:
                         host=request.headers.get('host'),
                         user_agent=request.headers.get('user-agent')
                     )
-                    session.create()
+                    await session.create()
                     return await ResponseUtils.success(DataUtils.responses.authorized, token)
                 else:
                     return await ResponseUtils.error(*DataUtils.responses.invalid_credentials)

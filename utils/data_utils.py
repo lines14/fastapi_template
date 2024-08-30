@@ -3,7 +3,7 @@ import json
 import classutilities
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
-class DataUtils(classutilities.ClassPropertiesMixin):
+class DataUtils():
     @classutilities.classproperty
     def obj_template(cls):
         return type('', (object,), {})()

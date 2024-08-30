@@ -19,8 +19,8 @@ class Session(Database):
         self.user_agent = user_agent
         self.token = token
 
-    def create(self):
-        self.db.create(self)
+    async def create(self):
+        await self.db.create(self)
 
-    def get(self):
-        return self.db.get(self)
+    async def get(self):
+        return await self.db.get(self)

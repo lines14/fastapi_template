@@ -1,8 +1,9 @@
 import os
+import classutilities
+from typing import ClassVar
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
-
-class Settings(BaseSettings):
+class Config(BaseSettings):
     CURRENCY_RATES_URL: str
     REDIS_HOST: str
     REDIS_PASSWORD: str
@@ -13,12 +14,14 @@ class Settings(BaseSettings):
     DB_PORT: int
     TTL: int
     ALGORITHM: str
-    model_config = SettingsConfigDict(
-        env_file=os.path.join(os.path.dirname(os.path.abspath(__file__)), ".env")
-    )
-
-
-settings = Settings()
-def get_DB_URL():
-    return (f"mysql+aiomysql://root:{settings.DB_ROOT_PASSWORD}@"
-            f"{settings.DB_HOST}:{settings.DB_PORT}/{settings.DB_NAME}")
+    DB_URL = ClassVar[str]
+    model_config = SettingsConfigDict(env_file=os.path.join(os.path.dirname(os.path.abspath(__file__)), ".env"))
+    
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.DB_URL = (f"mysql+aiomysql://root:{self.DB_ROOT_PASSWORD}@"
+                       f"{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}")
+        
+    @classutilities.classproperty
+    def DB_URL(self):
+        return self.DB_URL
