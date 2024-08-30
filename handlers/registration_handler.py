@@ -10,7 +10,7 @@ class RegistrationHandler:
     async def registration(self, request: Request) -> str:
         try:
             request_data = await request.json()
-            if request_data['login'] and request_data['password']:
+            if User(**request_data):
                 user = User(login=request_data['login'])
                 if not await user.get():
                     user.password=CryptographyUtils.hash_string(request_data['password'])

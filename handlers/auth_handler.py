@@ -12,7 +12,7 @@ class AuthHandler:
     async def auth(self, request: Request) -> str:
         try:
             request_data = await request.json()
-            if request_data['login'] and request_data['password']:
+            if User(**request_data):
                 user = await User(login=request_data['login']).get()
                 if user and CryptographyUtils.verify_string(request_data['password'], user.password):
                     token = JWTUtils.generate_token(request_data['login'])
