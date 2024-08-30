@@ -13,10 +13,10 @@ class User(BaseModel, table=True):
     login: str = Field(index=True, nullable=False)
     password: str = Field(nullable=False)
 
-    async def create(self):
+    async def create(model):
         async with Database() as database:
-            await database.create(self)
+            await database.create(model)
 
-    async def get(self):
+    async def get(model):
         async with Database() as database:
-            return await database.get(self)
+            return await database.get(model)

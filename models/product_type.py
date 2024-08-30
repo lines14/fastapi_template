@@ -12,6 +12,6 @@ class ProductType(BaseModel, table=True):
     type: str = Field(nullable=False)
     group_id: int = Field(index=True, nullable=False)
 
-    async def get(self):
+    async def get(model):
         async with Database() as database:
-            return await database.get(self)
+            return await database.get(model)

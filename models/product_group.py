@@ -11,6 +11,6 @@ class ProductGroup(BaseModel, table=True):
     updated_at: datetime = Field(sa_column=Column(DateTime, server_default=func.now(), nullable=False, onupdate=datetime.now))
     group: str = Field(nullable=False)
 
-    async def get(self):
+    async def get(model):
         async with Database() as database:
-            return await database.get(self)
+            return await database.get(model)
