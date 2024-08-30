@@ -18,8 +18,7 @@ class AuthMiddleware:
                 token = auth.split(" ")[1]
                 try:
                     payload = JWTUtils.verify_token(token)
-                    redis_repository = RedisRepository()
-                    savedToken = redis_repository.get_user(payload['login'])
+                    savedToken = RedisRepository().get_user(payload['login'])
                     user = await Session(login=payload['login']).get()
                     if (savedToken and user and token == savedToken.decode('utf-8') 
                         and CryptographyUtils.verify_string(token, user.token)):

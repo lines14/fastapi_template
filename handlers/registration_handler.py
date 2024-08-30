@@ -12,9 +12,9 @@ class RegistrationHandler:
             request_data = await request.json()
             if request_data['login'] and request_data['password']:
                 user = User(login=request_data['login'])
-                if not user.get():
+                if not await user.get():
                     user.password=CryptographyUtils.hash_string(request_data['password'])
-                    user.create()
+                    await user.create()
                     return await ResponseUtils.success(DataUtils.responses.registered)
                 else:
                     return await ResponseUtils.error(*DataUtils.responses.user_exists)

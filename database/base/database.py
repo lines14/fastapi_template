@@ -1,23 +1,25 @@
 import asyncio
-from typing import Annotated
 from config import Config
+from typing import Annotated
 from datetime import datetime
 from sqlalchemy import inspect, desc, func, select
-from sqlalchemy.ext.asyncio import async_sessionmaker, AsyncAttrs, create_async_engine, AsyncSession
 from sqlalchemy.orm import DeclarativeBase, declared_attr, Mapped, mapped_column
+from sqlalchemy.ext.asyncio import async_sessionmaker, AsyncAttrs, create_async_engine, AsyncSession
 
 class Database(AsyncAttrs, DeclarativeBase):
     __abstract__ = True
     int_primary_key = Annotated[int, mapped_column(primary_key=True)]
+    str_primary_key = Annotated[str, mapped_column(primary_key=True)]
+    str_nullable_true = Annotated[str, mapped_column(nullable=True)]
+    int_nullable_true = Annotated[int, mapped_column(nullable=True)]
+    str_nullable_false = Annotated[str, mapped_column(nullable=False)]
+    int_nullable_false = Annotated[int, mapped_column(nullable=False)]
+    str_unique = Annotated[str, mapped_column(unique=True, nullable=False)]
     created_at = Annotated[datetime, mapped_column(server_default=func.now())]
     updated_at = Annotated[datetime, mapped_column(server_default=func.now(), onupdate=datetime.now)]
-    str_uniq = Annotated[str, mapped_column(unique=True, nullable=False)]
-    str_null_true = Annotated[str, mapped_column(nullable=True)]
 
     def __init__(self):
-        config = Config()
-        print(config.DB_URL)
-        engine = create_async_engine(Config.DB_URL)
+        engine = create_async_engine(Config().DB_URL)
         self.session: AsyncSession = async_sessionmaker(bind=engine, expire_on_commit=False, autocommit=False, autoflush=False)()
         async def create_tables():
             async with engine.begin() as conn:
@@ -49,7 +51,6 @@ class Database(AsyncAttrs, DeclarativeBase):
             if existing_record:
                 for attr, value in properties_for_update.items():
                     setattr(existing_record, attr, value)
-                setattr(existing_record, 'updated_at', datetime.utcnow())
             else:
                 self.session.add(instance)
             await self.session.commit()
