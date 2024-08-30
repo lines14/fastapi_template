@@ -15,9 +15,9 @@ class RegistrationHandler:
                 if not user.get():
                     user.password=CryptographyUtils.hash_string(request_data['password'])
                     user.create()
-                    return await ResponseUtils.success("Success")
+                    return await ResponseUtils.success(DataUtils.responses.registered)
                 else:
-                    return await ResponseUtils.error(*DataUtils.responses.user_already_exists)
+                    return await ResponseUtils.error(*DataUtils.responses.user_exists)
             else:
                 return await ResponseUtils.error(*DataUtils.responses.invalid_credentials)
         except Exception as e:

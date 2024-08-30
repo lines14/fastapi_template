@@ -1,6 +1,8 @@
 {
     "unauthorized": ["Unauthorized", "", 401],
     "invalid_credentials": ["Invalid credentials", "", 401],
-    "user_already_exists": ["User already exists", "", 401],
-    "info": "Hello, this response was created in FastAPI"
+    "user_exists": ["User already exists", "", 401],
+    "info": "Hello, this response was created in FastAPI",
+    "authorized": "Successfully authorized in Spending tracker",
+    "registered": "Successfully registered in Spending tracker"
 }
