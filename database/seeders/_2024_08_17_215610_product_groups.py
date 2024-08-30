@@ -1,5 +1,5 @@
 import asyncio
-from database.models import ProductGroup
+from models import ProductGroup
 from database.base.database import Database
 
 class ProductGroups():

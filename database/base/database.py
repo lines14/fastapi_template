@@ -1,5 +1,6 @@
 import re
 from config import Config
+from sqlmodel import Field
 from typing import Annotated
 from datetime import datetime
 from sqlalchemy import inspect, desc, func, select
@@ -9,16 +10,16 @@ from sqlalchemy.ext.asyncio import async_sessionmaker, AsyncAttrs, create_async_
 class Database(AsyncAttrs, DeclarativeBase):
     __abstract__ = True
     int_primary_key = Annotated[int, mapped_column(primary_key=True)]
-    str_primary_key = Annotated[str, mapped_column(primary_key=True)]
-    str_nullable_true = Annotated[str, mapped_column(nullable=True)]
-    int_nullable_true = Annotated[int, mapped_column(nullable=True)]
-    str_nullable_false = Annotated[str, mapped_column(nullable=False)]
-    int_nullable_false = Annotated[int, mapped_column(nullable=False)]
-    str_unique = Annotated[str, mapped_column(unique=True, nullable=False)]
-    created = Annotated[datetime, mapped_column(server_default=func.now())]
-    updated = Annotated[datetime, mapped_column(server_default=func.now(), onupdate=datetime.now)]
-    created_at: Mapped[created]
-    updated_at: Mapped[updated]
+    str_not_nullable = Annotated[str, mapped_column(nullable=False)]
+    float_not_nullable = Annotated[float, mapped_column(nullable=False)]
+    str_indexed_not_nullable = Annotated[str, mapped_column(index=True, nullable=False)]
+    int_indexed_not_nullable = Annotated[int, mapped_column(index=True, nullable=False)]
+    created_time = Annotated[datetime, mapped_column(server_default=func.now())]
+    updated_time = Annotated[datetime, mapped_column(server_default=func.now(), onupdate=datetime.now)]
+
+    id: Mapped[int_primary_key]
+    created_at: Mapped[created_time]
+    updated_at: Mapped[updated_time]
 
     def __init__(self):
         self.engine = create_async_engine(Config().DB_URL_ASYNC)
@@ -66,7 +67,7 @@ class Database(AsyncAttrs, DeclarativeBase):
             if existing_record:
                 for attr, value in properties_for_update.items():
                     setattr(existing_record, attr, value)
-                    # setattr(existing_record, 'updated_at', datetime.utcnow())
+                    setattr(existing_record, 'updated_at', datetime.utcnow())
             else:
                 self.session.add(instance)
             await self.session.commit()

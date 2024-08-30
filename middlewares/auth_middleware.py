@@ -1,7 +1,7 @@
 import json
+from models import Session
 from functools import wraps
 from typing import Callable, Any
-from database.models import Session
 from utils.JWT_utils import JWTUtils
 from fastapi import Request, Response
 from utils.data_utils import DataUtils

@@ -4,8 +4,8 @@ sys.path.append(os.getcwd())
 from dotenv import load_dotenv
 import xml.etree.ElementTree as ET
 from utils.data_utils import DataUtils
+from models import Currency, CurrencyRate
 from database.base.database import Database
-from database.models import Currency, CurrencyRate
 from services.currencies_service import CurrenciesService
 
 load_dotenv()
