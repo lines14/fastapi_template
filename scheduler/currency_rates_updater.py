@@ -23,10 +23,12 @@ class CurrencyRatesUpdater:
         titles = list(map(lambda currency: currency.currency, await Currency().get_all()))
         currency_rates = list(filter(lambda currency_rate: currency_rate.title in titles, currency_rates))
         currency_rates = sorted(currency_rates, key=lambda currency_rate: titles.index(currency_rate.title))
-        currency_rates_models = list(map(lambda currency_rate: CurrencyRate(currency_id=(await Currency(currency=currency_rate.title)
-                                                                                         .get()).id, rate=currency_rate.rate), currency_rates))
-        await Database().seed([
-            CurrencyRate(currency_id=(await Currency(currency='KZT').get()).id, rate=1),
-            *currency_rates_models
-        ])
+        currency_rates_models = []
+        for currency_rate in currency_rates:
+            currency_rates_models.append(CurrencyRate(currency_id=(await Currency(currency=currency_rate.title).get()).id, rate=currency_rate.rate))
+        async with Database() as database:
+            await database.seed([
+                CurrencyRate(currency_id=(await Currency(currency='KZT').get()).id, rate=1),
+                *currency_rates_models
+            ])
         print(f'INFO:     Successfully updated currency rates')

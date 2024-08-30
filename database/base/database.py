@@ -26,11 +26,18 @@ class Database(AsyncAttrs, DeclarativeBase):
             expire_on_commit=False, 
             autocommit=False, 
             autoflush=False
-        )()
+        )
         async def create_tables():
             async with engine.begin() as connection:
                 await connection.run_sync(self.metadata.create_all)
         asyncio.create_task(create_tables())
+
+    async def __aenter__(self):
+        self.session = self.session()
+        return self
+
+    async def __aexit__(self, exc_type, exc_val, exc_tb):
+        await self.session.close()
 
     @declared_attr.directive
     def __tablename__(cls) -> str:
@@ -57,6 +64,7 @@ class Database(AsyncAttrs, DeclarativeBase):
             if existing_record:
                 for attr, value in properties_for_update.items():
                     setattr(existing_record, attr, value)
+                    setattr(existing_record, 'updated_at', datetime.utcnow())
             else:
                 self.session.add(instance)
             await self.session.commit()

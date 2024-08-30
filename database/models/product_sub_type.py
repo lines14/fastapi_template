@@ -8,3 +8,8 @@ class ProductSubType(Database):
     type_id = Column(Integer, index=True, nullable=False)
     created_at = Column(DateTime, server_default=func.now(), nullable=False)
     updated_at = Column(DateTime, server_default=func.now(), nullable=False)
+
+    def __init__(self, sub_type=None, type_id=None):
+        self.db = Database()
+        self.sub_type = sub_type
+        self.type_id = type_id
