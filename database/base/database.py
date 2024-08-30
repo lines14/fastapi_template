@@ -1,18 +1,12 @@
 import re
 from config import Config
-from sqlmodel import Field
-from typing import Annotated
 from datetime import datetime
-from typing import Optional
-from sqlalchemy import inspect, desc, func, select, Column, func, DateTime, Integer
-from sqlalchemy.orm import DeclarativeBase, declared_attr, Mapped, mapped_column
+from sqlalchemy import inspect, desc, select
+from sqlalchemy.orm import DeclarativeBase, declared_attr
 from sqlalchemy.ext.asyncio import async_sessionmaker, AsyncAttrs, create_async_engine, AsyncSession
 
 class Database(AsyncAttrs, DeclarativeBase):
     __abstract__ = True
-    id: int | None = Field(primary_key=True, nullable=False)
-    created_at: datetime = Field(sa_column=Column(DateTime, server_default=func.now(), nullable=False))
-    updated_at: datetime = Field(sa_column=Column(DateTime, server_default=func.now(), nullable=False, onupdate=datetime.now))
 
     def __init__(self):
         self.engine = create_async_engine(Config().DB_URL_ASYNC)

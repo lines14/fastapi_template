@@ -1,24 +1,16 @@
-from sqlmodel import SQLModel
-from typing import Optional
-from sqlalchemy.orm import Mapped
+from datetime import datetime
 from sqlmodel import SQLModel, Field
-from sqlalchemy import inspect, desc, func, select, Column, func, DateTime, Integer, String
 from database.base.database import Database
+from sqlalchemy import func, Column, func, DateTime
 
-class Session(Database, SQLModel, table=True):
-    id: int | None = Field(default=None, primary_key=True, nullable=False)
+class Session(SQLModel):
+    id: int = Field(primary_key=True, nullable=False)
+    created_at: datetime = Field(sa_column=Column(DateTime, server_default=func.now(), nullable=False))
+    updated_at: datetime = Field(sa_column=Column(DateTime, server_default=func.now(), nullable=False, onupdate=datetime.now))
     login: str = Field(index=True, nullable=False)
     host: str = Field(nullable=False)
     user_agent: str = Field(nullable=False)
     token: str = Field(nullable=False)
-
-    # id = Column(Integer, primary_key=True, autoincrement=True, nullable=False)
-    # login = Column(String(255), nullable=False, index=True)
-    # host = Column(String(255), nullable=False)
-    # user_agent = Column(String(255), nullable=False)
-    # token = Column(String(255), nullable=False)
-    # created_at = Column(DateTime, server_default=func.now(), nullable=False)
-    # updated_at = Column(DateTime, server_default=func.now(), nullable=False)
 
     def __init__(self, login=None, host=None, user_agent=None, token=None):
         self.login = login
