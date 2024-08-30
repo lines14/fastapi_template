@@ -3,7 +3,6 @@ from database.base.database import Database
 from sqlalchemy import Column, Integer, Float, DateTime
 
 class CurrencyRate(Database):
-    __tablename__ = 'currency_rates'
     id = Column(Integer, primary_key=True, autoincrement=True, nullable=False)
     rate = Column(Float, nullable=False)
     currency_id = Column(Integer, index=True, nullable=False)

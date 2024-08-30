@@ -1,3 +1,4 @@
+import re
 import asyncio
 from config import Config
 from typing import Annotated
@@ -20,15 +21,20 @@ class Database(AsyncAttrs, DeclarativeBase):
 
     def __init__(self):
         engine = create_async_engine(Config().DB_URL)
-        self.session: AsyncSession = async_sessionmaker(bind=engine, expire_on_commit=False, autocommit=False, autoflush=False)()
+        self.session: AsyncSession = async_sessionmaker(
+            bind=engine, 
+            expire_on_commit=False, 
+            autocommit=False, 
+            autoflush=False
+        )()
         async def create_tables():
-            async with engine.begin() as conn:
-                await conn.run_sync(self.metadata.create_all)
+            async with engine.begin() as connection:
+                await connection.run_sync(self.metadata.create_all)
         asyncio.create_task(create_tables())
 
     @declared_attr.directive
     def __tablename__(cls) -> str:
-        return f"{cls.__name__.lower()}s"
+        return re.sub(r'(?<!^)(?=[A-Z])', '_', cls.__name__).lower() + 's'
 
     async def seed(self, instances):
         for index, instance in enumerate(instances):
@@ -42,12 +48,12 @@ class Database(AsyncAttrs, DeclarativeBase):
         if 'id' in instance_properties:
             instance_properties = {key: value for key, value in instance_properties.items() if key == 'id'}
         filter_expressions = [getattr(type(instance), key) == value for key, value in instance_properties.items()]
-        
         async with self.session.begin():
-            stmt = select(type(instance)).filter(*filter_expressions)
-            result = await self.session.execute(stmt)
-            existing_record = result.scalar_one_or_none()
-
+            existing_record = ((await self.session.execute(select(type(instance))
+                                                           .filter(*filter_expressions)
+                                                           .order_by(desc(type(instance).id))))
+                                                           .scalars()
+                                                           .first())
             if existing_record:
                 for attr, value in properties_for_update.items():
                     setattr(existing_record, attr, value)
@@ -64,14 +70,16 @@ class Database(AsyncAttrs, DeclarativeBase):
         instance_properties = {attr.key: getattr(instance, attr.key) for attr in inspect(instance).mapper.column_attrs}
         instance_properties = {key: value for key, value in instance_properties.items() if value is not None}
         filter_expressions = [getattr(type(instance), key) == value for key, value in instance_properties.items()]
-        
         async with self.session.begin():
-            stmt = select(type(instance)).filter(*filter_expressions).order_by(desc(type(instance).id))
-            result = await self.session.execute(stmt)
-            return result.scalars().first()
+            return ((await self.session.execute(select(type(instance))
+                                                .filter(*filter_expressions)
+                                                .order_by(desc(type(instance).id))))
+                                                .scalars()
+                                                .first())
     
     async def get_all(self, instance):
         async with self.session.begin():
-            stmt = select(instance).order_by(desc(type(instance).id))
-            result = await self.session.execute(stmt)
-            return result.scalars().all()
+            return ((await self.session.execute(select(type(instance))
+                                                .order_by(desc(type(instance).id))))
+                                                .scalars()
+                                                .all())

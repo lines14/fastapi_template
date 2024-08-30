@@ -29,8 +29,7 @@ RUN echo "alias migration='python database/config/create_migration.py'" >> ~/.ba
 RUN echo "alias seeder='python database/config/create_seeder.py'" >> ~/.bashrc
 RUN echo 'alias currencies:update="python -c \"import asyncio; \
 from scheduler.currency_rates_updater import CurrencyRatesUpdater; \
-currency_rates_updater = CurrencyRatesUpdater(); \
-asyncio.run(currency_rates_updater.update())\""' >> ~/.bashrc
+asyncio.run(CurrencyRatesUpdater().update())\""' >> ~/.bashrc
 
 RUN /bin/sh -c "source ../home/myuser/.bashrc"
 

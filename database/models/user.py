@@ -3,7 +3,6 @@ from database.base.database import Database
 from sqlalchemy import Column, Integer, String, DateTime
 
 class User(Database):
-    __tablename__ = 'users'
     id = Column(Integer, primary_key=True, autoincrement=True, nullable=False)
     login = Column(String(255), nullable=False, index=True)
     password = Column(String(255), nullable=False)
@@ -15,8 +14,8 @@ class User(Database):
         self.login = login
         self.password = password
 
-    def create(self):
-        self.db.create(self)
+    async def create(self):
+        await self.db.create(self)
 
-    def get(self):
-        return self.db.get(self)
+    async def get(self):
+        return await self.db.get(self)
