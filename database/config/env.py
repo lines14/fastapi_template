@@ -14,7 +14,7 @@ from alembic.runtime.migration import MigrationContext
 config = context.config
 current_dir = os.path.dirname(os.path.abspath(__file__))
 migrations_dir = os.path.join(current_dir, '../migrations')
-config.set_main_option('sqlalchemy.url', Config().DB_URL)
+config.set_main_option('sqlalchemy.url', Config().DB_URL_SYNC)
 
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.

@@ -9,14 +9,14 @@ class ProductTypes():
         async def seed():
             async with Database() as database:
                 await database.seed([
-                    ProductType(group_id=ProductGroup(group='Продукты').get().id, type='Овощи'),
-                    ProductType(group_id=ProductGroup(group='Продукты').get().id, type='Фрукты и ягоды'),
-                    ProductType(group_id=ProductGroup(group='Продукты').get().id, type='Молочные продукты'),
-                    ProductType(group_id=ProductGroup(group='Продукты').get().id, type='Мясные продукты'),
-                    ProductType(group_id=ProductGroup(group='Продукты').get().id, type='Замороженные продукты'),
-                    ProductType(group_id=ProductGroup(group='Продукты').get().id, type='Бакалея'),
-                    ProductType(group_id=ProductGroup(group='Продукты').get().id, type='Алкогольные напитки'),
-                    ProductType(group_id=ProductGroup(group='Бытовые товары').get().id, type='Личная гигиена'),
-                    ProductType(group_id=ProductGroup(group='Бытовые товары').get().id, type='Уборка')
+                    ProductType(group_id=(await ProductGroup(group='Продукты').get()).id, type='Овощи'),
+                    ProductType(group_id=(await ProductGroup(group='Продукты').get()).id, type='Фрукты и ягоды'),
+                    ProductType(group_id=(await ProductGroup(group='Продукты').get()).id, type='Молочные продукты'),
+                    ProductType(group_id=(await ProductGroup(group='Продукты').get()).id, type='Мясные продукты'),
+                    ProductType(group_id=(await ProductGroup(group='Продукты').get()).id, type='Замороженные продукты'),
+                    ProductType(group_id=(await ProductGroup(group='Продукты').get()).id, type='Бакалея'),
+                    ProductType(group_id=(await ProductGroup(group='Продукты').get()).id, type='Алкогольные напитки'),
+                    ProductType(group_id=(await ProductGroup(group='Бытовые товары').get()).id, type='Личная гигиена'),
+                    ProductType(group_id=(await ProductGroup(group='Бытовые товары').get()).id, type='Уборка')
                 ])
-        asyncio.create_task(seed())
+        asyncio.run(seed())

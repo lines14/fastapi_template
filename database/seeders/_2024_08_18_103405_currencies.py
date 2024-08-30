@@ -14,4 +14,4 @@ class Currencies():
                     Currency(currency='USD'),
                     Currency(currency='EUR')
                 ])
-        asyncio.create_task(seed())
+        asyncio.run(seed())

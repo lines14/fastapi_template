@@ -19,7 +19,7 @@ class Database(AsyncAttrs, DeclarativeBase):
     updated_at = Annotated[datetime, mapped_column(server_default=func.now(), onupdate=datetime.now)]
 
     def __init__(self):
-        self.engine = create_async_engine(Config().DB_URL)
+        self.engine = create_async_engine(Config().DB_URL_ASYNC)
         self.session: AsyncSession = async_sessionmaker(
             bind=self.engine, 
             expire_on_commit=False, 
@@ -64,7 +64,7 @@ class Database(AsyncAttrs, DeclarativeBase):
             if existing_record:
                 for attr, value in properties_for_update.items():
                     setattr(existing_record, attr, value)
-                    setattr(existing_record, 'updated_at', datetime.utcnow())
+                    # setattr(existing_record, 'updated_at', datetime.utcnow())
             else:
                 self.session.add(instance)
             await self.session.commit()
@@ -87,7 +87,4 @@ class Database(AsyncAttrs, DeclarativeBase):
     
     async def get_all(self, instance):
         async with self.session.begin():
-            return ((await self.session.execute(select(type(instance))
-                                                .order_by(desc(type(instance).id))))
-                                                .scalars()
-                                                .all())
+            return (await self.session.execute(select(type(instance)))).scalars().all()

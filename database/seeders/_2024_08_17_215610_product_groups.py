@@ -15,4 +15,4 @@ class ProductGroups():
                     ProductGroup(group='Одежда'),
                     ProductGroup(group='Услуги')
                 ])
-        asyncio.create_task(seed())
+        asyncio.run(seed())

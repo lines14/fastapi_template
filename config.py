@@ -16,8 +16,13 @@ class Config(BaseSettings):
     model_config = SettingsConfigDict(env_file=os.path.join(os.path.dirname(os.path.abspath(__file__)), ".env"))
 
     @property
-    def DB_URL(self) -> str:
+    def DB_URL_ASYNC(self) -> str:
         return (f"mysql+aiomysql://root:{self.DB_ROOT_PASSWORD}@"
+                f"{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}")
+    
+    @property
+    def DB_URL_SYNC(self) -> str:
+        return (f"mysql+pymysql://root:{self.DB_ROOT_PASSWORD}@"
                 f"{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}")
     
     @property
