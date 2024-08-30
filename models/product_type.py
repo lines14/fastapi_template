@@ -1,9 +1,11 @@
 from sqlalchemy.orm import Mapped
+from sqlmodel import SQLModel, Field
 from database.base.database import Database
 
-class ProductType(Database):
-    type: Mapped[Database.str_not_nullable]
-    group_id: Mapped[Database.int_indexed_not_nullable]
+class ProductType(Database, SQLModel):
+    id: int = Field(primary_key=True, nullable=False)
+    type: str = Field(nullable=False)
+    group_id: int = Field(index=True, nullable=False)
 
     def __init__(self, type=None, group_id=None):
         self.type = type

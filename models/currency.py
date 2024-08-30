@@ -1,10 +1,12 @@
 from sqlalchemy.orm import Mapped
+from sqlmodel import SQLModel, Field
 from database.base.database import Database
 
-class Currency(Database):
+class Currency(Database, SQLModel):
     __tablename__ = 'currencies'
 
-    currency: Mapped[Database.str_indexed_not_nullable]
+    id: int = Field(primary_key=True, nullable=False)
+    currency: str = Field(index=True, nullable=False)
 
     def __init__(self, currency=None):
         self.currency = currency

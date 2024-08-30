@@ -1,10 +1,11 @@
-from sqlmodel import SQLModel
 from sqlalchemy.orm import Mapped
+from sqlmodel import SQLModel, Field
 from database.base.database import Database
 
 class User(Database, SQLModel):
-    login: Mapped[Database.str_indexed_not_nullable]
-    password: Mapped[Database.str_not_nullable]
+    id: int | None = Field(default=None, primary_key=True, nullable=False)
+    login: str = Field(index=True, nullable=False)
+    password: str = Field(nullable=False)
 
     def __init__(self, login=None, password=None):
         self.login = login

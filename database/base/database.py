@@ -3,23 +3,16 @@ from config import Config
 from sqlmodel import Field
 from typing import Annotated
 from datetime import datetime
-from sqlalchemy import inspect, desc, func, select
+from typing import Optional
+from sqlalchemy import inspect, desc, func, select, Column, func, DateTime, Integer
 from sqlalchemy.orm import DeclarativeBase, declared_attr, Mapped, mapped_column
 from sqlalchemy.ext.asyncio import async_sessionmaker, AsyncAttrs, create_async_engine, AsyncSession
 
 class Database(AsyncAttrs, DeclarativeBase):
     __abstract__ = True
-    int_primary_key = Annotated[int, mapped_column(primary_key=True)]
-    str_not_nullable = Annotated[str, mapped_column(nullable=False)]
-    float_not_nullable = Annotated[float, mapped_column(nullable=False)]
-    str_indexed_not_nullable = Annotated[str, mapped_column(index=True, nullable=False)]
-    int_indexed_not_nullable = Annotated[int, mapped_column(index=True, nullable=False)]
-    created_time = Annotated[datetime, mapped_column(server_default=func.now())]
-    updated_time = Annotated[datetime, mapped_column(server_default=func.now(), onupdate=datetime.now)]
-
-    id: Mapped[int_primary_key]
-    created_at: Mapped[created_time]
-    updated_at: Mapped[updated_time]
+    id: int | None = Field(primary_key=True, nullable=False)
+    created_at: datetime = Field(sa_column=Column(DateTime, server_default=func.now(), nullable=False))
+    updated_at: datetime = Field(sa_column=Column(DateTime, server_default=func.now(), nullable=False, onupdate=datetime.now))
 
     def __init__(self):
         self.engine = create_async_engine(Config().DB_URL_ASYNC)
