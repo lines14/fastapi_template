@@ -11,7 +11,7 @@ class RegistrationHandler:
         try:
             request_data = await request.json()
             if request_data['login'] and request_data['password']:
-                user = User(login=request_data['login'])
+                user = User(request_data['login'])
                 if not await user.get():
                     user.password=CryptographyUtils.hash_string(request_data['password'])
                     await user.create()
