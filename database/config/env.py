@@ -1,8 +1,8 @@
 import os
 import traceback
 from typing import Dict
+from config import Config
 from alembic import context
-from dotenv import dotenv_values
 from logging.config import fileConfig
 from sqlalchemy.engine import reflection
 from sqlalchemy import engine_from_config, pool, text
@@ -12,18 +12,9 @@ from alembic.runtime.migration import MigrationContext
 # access to the values within the .ini file in use.
 
 config = context.config
-env_vars = dotenv_values(dotenv_path=f'{os.getcwd()}/.env')
 current_dir = os.path.dirname(os.path.abspath(__file__))
 migrations_dir = os.path.join(current_dir, '../migrations')
-
-HOST = env_vars.get('DB_HOST')
-PORT = env_vars.get('DB_PORT')
-DATABASE = env_vars.get('DB_NAME')
-PASSWORD = env_vars.get('DB_ROOT_PASSWORD')
-config.set_main_option(
-    'sqlalchemy.url', 
-    f'mysql+aiomysql://root:{PASSWORD}@{HOST}:{PORT}/{DATABASE}'
-)
+config.set_main_option('sqlalchemy.url', Config().DB_URL)
 
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.
