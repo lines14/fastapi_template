@@ -15,8 +15,10 @@ class Database(AsyncAttrs, DeclarativeBase):
     str_nullable_false = Annotated[str, mapped_column(nullable=False)]
     int_nullable_false = Annotated[int, mapped_column(nullable=False)]
     str_unique = Annotated[str, mapped_column(unique=True, nullable=False)]
-    created_at = Annotated[datetime, mapped_column(server_default=func.now())]
-    updated_at = Annotated[datetime, mapped_column(server_default=func.now(), onupdate=datetime.now)]
+    created = Annotated[datetime, mapped_column(server_default=func.now())]
+    updated = Annotated[datetime, mapped_column(server_default=func.now(), onupdate=datetime.now)]
+    created_at: Mapped[created]
+    updated_at: Mapped[updated]
 
     def __init__(self):
         self.engine = create_async_engine(Config().DB_URL_ASYNC)
