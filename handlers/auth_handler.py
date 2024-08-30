@@ -16,7 +16,7 @@ class AuthHandler:
                 user = await User(login=request_data['login']).get()
                 if user and CryptographyUtils.verify_string(request_data['password'], user.password):
                     token = JWTUtils.generate_token(request_data['login'])
-                    RedisRepository().set_user(request_data['login'], token)
+                    await RedisRepository().set_user(request_data['login'], token)
                     session = Session(
                         login=request_data['login'], 
                         token=CryptographyUtils.hash_string(token),
