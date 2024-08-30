@@ -16,13 +16,13 @@ env_vars = dotenv_values(dotenv_path=f'{os.getcwd()}/.env')
 current_dir = os.path.dirname(os.path.abspath(__file__))
 migrations_dir = os.path.join(current_dir, '../migrations')
 
-HOST = env_vars.get('MYSQL_HOST')
-PORT = env_vars.get('MYSQL_PORT')
-DATABASE = env_vars.get('MYSQL_DATABASE')
-PASSWORD = env_vars.get('MYSQL_ROOT_PASSWORD')
+HOST = env_vars.get('DB_HOST')
+PORT = env_vars.get('DB_PORT')
+DATABASE = env_vars.get('DB_NAME')
+PASSWORD = env_vars.get('DB_ROOT_PASSWORD')
 config.set_main_option(
     'sqlalchemy.url', 
-    f'mysql+pymysql://root:{PASSWORD}@{HOST}:{PORT}/{DATABASE}'
+    f'mysql+aiomysql://root:{PASSWORD}@{HOST}:{PORT}/{DATABASE}'
 )
 
 # Interpret the config file for Python logging.
@@ -37,7 +37,7 @@ if config.config_file_name is not None:
 from database.models import *
 from utils.logger import Logger
 from database.base.database import Database
-target_metadata = Database.Base.metadata
+target_metadata = Database.metadata
 
 # other values from the config, defined by the needs of env.py,
 # can be acquired:

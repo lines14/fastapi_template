@@ -2,7 +2,7 @@ from sqlalchemy.sql import func
 from database.base.database import Database
 from sqlalchemy import Column, Integer, String, DateTime
 
-class ProductType(Database.Base):
+class ProductType(Database):
     __tablename__ = 'product_types'
     id = Column(Integer, primary_key=True, autoincrement=True, nullable=False)
     type = Column(String(255), nullable=False)
