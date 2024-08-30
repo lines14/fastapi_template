@@ -13,14 +13,16 @@ else:
     version = datetime.now().strftime("_%Y_%m_%d_%H%M%S")
     print(f'  Generating /app/database/seeders/{version}_{file_name}.py ...  done')
 
-    content = f"""from database.database import Database\n
+    content = f"""import asyncio\nfrom database.base.database import Database\n
 class {class_name}():
     revision: str = '{version}'\n
     def __init__(self):
-        database = Database()
-        database.seed([
-            # Add your seed data here
-        ])
+        async def seed():
+            async with Database() as database:
+                await database.seed([
+                    # Add your seed data here
+                ])
+        asyncio.create_task(seed())
 """
 
     with open(os.path.join(cwd, 'database/seeders', version + '_' + file_name + '.py'), 'w') as file:
