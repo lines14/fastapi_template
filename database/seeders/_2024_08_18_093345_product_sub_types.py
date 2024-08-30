@@ -1,5 +1,5 @@
 from database.base.database import Database
-from models import ProductType, ProductSubType
+from database.models import ProductType, ProductSubType
 
 class ProductSubTypes():
     revision: str = '_2024_08_18_093345'

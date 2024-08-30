@@ -1,7 +1,7 @@
 import traceback
-from models import User
 from fastapi import Request
 from utils.logger import Logger
+from database.models import User
 from utils.data_utils import DataUtils
 from utils.response_utils import ResponseUtils
 from utils.cryptography_utils import CryptographyUtils

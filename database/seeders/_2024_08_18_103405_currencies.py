@@ -1,4 +1,4 @@
-from models import Currency
+from database.models import Currency
 from database.base.database import Database
 
 class Currencies():

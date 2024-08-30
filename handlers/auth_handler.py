@@ -1,10 +1,9 @@
 import traceback
-from models import User
-from models import Session
 from fastapi import Request
 from utils.logger import Logger
 from utils.JWT_utils import JWTUtils
 from utils.data_utils import DataUtils
+from database.models import User, Session
 from utils.response_utils import ResponseUtils
 from utils.cryptography_utils import CryptographyUtils
 from repositories.redis_repository import RedisRepository

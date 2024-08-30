@@ -1,4 +1,4 @@
-from models import ProductGroup
+from database.models import ProductGroup
 from database.base.database import Database
 
 class ProductGroups():
