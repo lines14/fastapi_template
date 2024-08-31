@@ -46,16 +46,11 @@ async def template(request: Request) -> Response:
     return await template_handler.template(request)
 
 @app.post('/registration')
-async def registration(
-    user: User = Depends(validate(User, fields=['login', 'password']))
-) -> Response:
+async def auth(user: User = Depends(User.validate(User, fields=['login', 'password']))) -> Response:
     return await registration_handler.registration(user)
 
 @app.post('/auth')
-async def auth(
-    request: Request, 
-    user: User = Depends(validate(User, fields=['login', 'password']))
-) -> Response:
+async def auth(request: Request, user: User = Depends(User.validate(User, fields=['login', 'password']))) -> Response:
     return await auth_handler.auth(request, user)
 
 @app.get('/greetings')
