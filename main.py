@@ -1,6 +1,7 @@
 import asyncio
 import aioschedule
 from dotenv import load_dotenv
+from models.user import Login, Password
 from contextlib import asynccontextmanager
 from fastapi.responses import HTMLResponse
 from handlers.auth_handler import AuthHandler
@@ -44,11 +45,11 @@ async def template(request: Request) -> Response:
     return await template_handler.template(request)
 
 @app.post('/registration')
-async def registration(request: Request) -> Response:
+async def registration(request: Request, login: Login, password: Password) -> Response:
     return await registration_handler.registration(request)
 
 @app.post('/auth')
-async def auth(request: Request) -> Response:
+async def auth(request: Request, login: Login, password: Password) -> Response:
     return await auth_handler.auth(request)
 
 @app.get('/greetings')

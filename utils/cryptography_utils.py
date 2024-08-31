@@ -2,13 +2,13 @@ import bcrypt
 
 class CryptographyUtils:
     @staticmethod
-    def hash_string(token: str):
-        token_bytes = token.encode('utf-8')
-        hashed_token = bcrypt.hashpw(token_bytes, bcrypt.gensalt())
-        return hashed_token.decode('utf-8')
+    def hash_string(string: str):
+        string_bytes = string.encode('utf-8')
+        hashed_string = bcrypt.hashpw(string_bytes, bcrypt.gensalt())
+        return hashed_string.decode('utf-8')
     
     @staticmethod
-    def verify_string(token: str, hashed_token: str) -> bool:
-        token_bytes = token.encode('utf-8')
-        hashed_token_bytes = hashed_token.encode('utf-8')
-        return bcrypt.checkpw(token_bytes, hashed_token_bytes)
+    def verify_string(string: str, hashed_string: str) -> bool:
+        string_bytes = string.encode('utf-8')
+        hashed_string_bytes = hashed_string.encode('utf-8')
+        return bcrypt.checkpw(string_bytes, hashed_string_bytes)
