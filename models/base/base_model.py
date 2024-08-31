@@ -12,7 +12,10 @@ def validate(cls: Type[BaseModel], fields: List[str]):
         for field in fields:
             if field in data:
                 try:
-                    SingleFieldModel = create_model('SingleFieldModel', **{field: (cls.__annotations__[field], ...)})
+                    SingleFieldModel = create_model(
+                        'SingleFieldModel', 
+                        **{field: (cls.__annotations__[field], ...)}
+                    )
                     validated_field = SingleFieldModel(**{field: data[field]})
                     validated_data[field] = validated_field.dict()[field]
                 except ValidationError as e:
