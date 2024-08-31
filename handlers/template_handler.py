@@ -10,13 +10,13 @@ from models.responses.response_template_context_model import ResponseTemplateCon
 class TemplateHandler:
     async def template(self, request: Request) -> Response:
         try:
-            data = ResponseTemplateContextModel(
+            validated_data = ResponseTemplateContextModel(
                 request=request, 
                 pythonVersion=version, 
                 fastapiVersion=__version__
             )
             templates = Jinja2Templates(directory="../templates")
-            template = templates.TemplateResponse("index.html", vars(data))
+            template = templates.TemplateResponse("index.html", vars(validated_data))
             ResponseTemplateModel(**vars(template))
             return template
         except Exception as e:

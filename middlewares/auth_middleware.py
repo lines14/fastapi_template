@@ -8,6 +8,7 @@ from utils.data_utils import DataUtils
 from utils.response_utils import ResponseUtils
 from utils.cryptography_utils import CryptographyUtils
 from repositories.redis_repository import RedisRepository
+from models.responses.JWT_verify_model import JWTVerifyModel
 
 class AuthMiddleware:
     def check_bearer_token(self, function: Callable[..., Any]) -> Callable[..., Any]:
@@ -17,9 +18,9 @@ class AuthMiddleware:
             if auth and auth.startswith('Bearer '):
                 token = auth.split(" ")[1]
                 try:
-                    payload = JWTUtils.verify_token(token)
-                    savedToken = await RedisRepository().get_user(payload['login'])
-                    user = await Session(login=payload['login']).get()
+                    payload = JWTVerifyModel(**JWTUtils.verify_token(token))
+                    savedToken = await RedisRepository().get_user(payload.login)
+                    user = await Session(login=payload.login).get()
                     if (savedToken and user and token == savedToken.decode('utf-8') 
                         and CryptographyUtils.verify_string(token, user.token)):
                         return await function(request, *args, **kwargs)
