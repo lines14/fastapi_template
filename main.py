@@ -1,10 +1,11 @@
 import asyncio
 import aioschedule
-from typing import Annotated
+from typing import Dict
 from models.user import User
 from dotenv import load_dotenv
 from contextlib import asynccontextmanager
 from fastapi.responses import HTMLResponse
+from models.base.base_model import validate
 from handlers.auth_handler import AuthHandler
 from handlers.template_handler import TemplateHandler
 from middlewares.auth_middleware import AuthMiddleware
@@ -46,11 +47,13 @@ async def template(request: Request) -> Response:
     return await template_handler.template(request)
 
 @app.post('/registration')
-async def registration(user: Annotated[User, Depends()]) -> Response:
-    return await registration_handler.registration(user)
+async def registration(
+    user: Dict[str, str] = Depends(validate(User, fields=['login', 'password']))
+) -> Response:
+    return await registration_handler.registration(User(**user))
 
 @app.post('/auth')
-async def auth(request: Request, user: Annotated[User, Depends()]) -> Response:
+async def auth(request: Request, user: User = Depends()) -> Response:
     return await auth_handler.auth(request, user)
 
 @app.get('/greetings')
