@@ -1,13 +1,10 @@
-import re
 from config import Config
 from datetime import datetime
 from sqlalchemy import inspect, desc, select
-from sqlalchemy.orm import DeclarativeBase, declared_attr
+from sqlalchemy.orm import DeclarativeBase
 from sqlalchemy.ext.asyncio import async_sessionmaker, AsyncAttrs, create_async_engine, AsyncSession
 
 class Database(AsyncAttrs, DeclarativeBase):
-    __abstract__ = True
-
     def __init__(self):
         self.engine = create_async_engine(Config().DB_URL_ASYNC)
         self.session: AsyncSession = async_sessionmaker(
@@ -28,10 +25,6 @@ class Database(AsyncAttrs, DeclarativeBase):
 
     async def __aexit__(self, exc_type, exc_val, exc_tb):
         await self.engine.dispose()
-
-    @declared_attr.directive
-    def __tablename__(cls) -> str:
-        return re.sub(r'(?<!^)(?=[A-Z])', '_', cls.__name__).lower() + 's'
 
     async def seed(self, instances):
         for index, instance in enumerate(instances):
