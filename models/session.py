@@ -2,12 +2,13 @@ from sqlmodel import Field
 from datetime import datetime
 from database.base.database import Database
 from models.base.base_model import BaseModel
+from models.base.extended_types import Login
 from sqlalchemy import func, Column, func, DateTime
 
 class Session(BaseModel, table=True):
     __tablename__ = 'sessions'
     id: int = Field(primary_key=True, nullable=False)
-    login: str = Field(index=True, nullable=False)
+    login: Login = Field(index=True, nullable=False)
     host: str = Field(nullable=False)
     user_agent: str = Field(nullable=False)
     token: str = Field(nullable=False)

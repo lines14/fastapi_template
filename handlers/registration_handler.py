@@ -1,20 +1,21 @@
 import traceback
 from models import User
+from fastapi import Response
 from utils.logger import Logger
-from fastapi import Request, Response
 from utils.data_utils import DataUtils
 from utils.response_utils import ResponseUtils
 from utils.cryptography_utils import CryptographyUtils
 
 class RegistrationHandler:
-    async def registration(self, request: Request) -> Response:
+    async def registration(self, user: User) -> Response:
         try:
-            request_data = await request.json()
-            validated_data = User(**request_data)
-            user = User(login=validated_data.login)
-            if not await user.get():
-                user.password=CryptographyUtils.hash_string(validated_data.password)
-                await user.create()
+            existing_user = await User(login=user.login).get()
+            if not existing_user:
+                new_user = User(
+                    login=user.login, 
+                    password=CryptographyUtils.hash_string(user.password)
+                )
+                await new_user.create()
                 return await ResponseUtils.success(DataUtils.responses.registered)
             else:
                 return await ResponseUtils.error(*DataUtils.responses.user_exists)

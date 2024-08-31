@@ -1,13 +1,14 @@
 import asyncio
 import aioschedule
+from typing import Annotated
+from models.user import User
 from dotenv import load_dotenv
-from models.user import Login, Password
 from contextlib import asynccontextmanager
 from fastapi.responses import HTMLResponse
 from handlers.auth_handler import AuthHandler
-from fastapi import FastAPI, Request, Response
 from handlers.template_handler import TemplateHandler
 from middlewares.auth_middleware import AuthMiddleware
+from fastapi import FastAPI, Request, Response, Depends
 from handlers.greetings_handler import GreetingsHandler
 from handlers.registration_handler import RegistrationHandler
 from scheduler.currency_rates_updater import CurrencyRatesUpdater
@@ -45,14 +46,14 @@ async def template(request: Request) -> Response:
     return await template_handler.template(request)
 
 @app.post('/registration')
-async def registration(request: Request, login: Login, password: Password) -> Response:
-    return await registration_handler.registration(request)
+async def registration(user: Annotated[User, Depends()]) -> Response:
+    return await registration_handler.registration(user)
 
 @app.post('/auth')
-async def auth(request: Request, login: Login, password: Password) -> Response:
-    return await auth_handler.auth(request)
+async def auth(request: Request, user: Annotated[User, Depends()]) -> Response:
+    return await auth_handler.auth(request, user)
 
 @app.get('/greetings')
 @auth_middleware.check_bearer_token
-async def greetings(request: Request) -> Response:
-    return await greetings_handler.greetings(request)
+async def greetings() -> Response:
+    return await greetings_handler.greetings()

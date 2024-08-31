@@ -9,16 +9,14 @@ from utils.cryptography_utils import CryptographyUtils
 from repositories.redis_repository import RedisRepository
 
 class AuthHandler:
-    async def auth(self, request: Request) -> Response:
+    async def auth(self, request: Request, user: User) -> Response:
         try:
-            request_data = await request.json()
-            validated_data = User(**request_data)
-            user = await User(login=validated_data.login).get()
-            if user and CryptographyUtils.verify_string(validated_data.password, user.password):
-                token = JWTUtils.generate_token(validated_data.login)
-                await RedisRepository().set_user(validated_data.login, token)
+            existing_user = await User(login=user.login).get()
+            if existing_user and CryptographyUtils.verify_string(user.password, existing_user.password):
+                token = JWTUtils.generate_token(user.login)
+                await RedisRepository().set_user(user.login, token)
                 session = Session(
-                    login=validated_data.login, 
+                    login=user.login, 
                     token=CryptographyUtils.hash_string(token),
                     host=request.headers.get('host'),
                     user_agent=request.headers.get('user-agent')

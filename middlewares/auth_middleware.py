@@ -16,8 +16,8 @@ class AuthMiddleware:
         async def wrapper(request: Request, *args: Any, **kwargs: Any) -> Response:
             auth = request.headers.get('Authorization')
             if auth and auth.startswith('Bearer '):
-                token = auth.split(" ")[1]
                 try:
+                    token = auth.split(" ")[1]
                     payload = JWTVerifyModel(**JWTUtils.verify_token(token))
                     savedToken = await RedisRepository().get_user(payload.login)
                     user = await Session(login=payload.login).get()
