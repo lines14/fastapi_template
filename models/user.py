@@ -12,10 +12,10 @@ class User(BaseModel, table=True):
     created_at: datetime = Field(sa_column=Column(DateTime, server_default=func.now(), nullable=False))
     updated_at: datetime = Field(sa_column=Column(DateTime, server_default=func.now(), nullable=False, onupdate=func.now()))
 
-    async def create(model):
+    async def create(self):
         async with Database() as database:
-            await database.create(model)
+            await database.create(self)
 
-    async def get(model):
+    async def get(self):
         async with Database() as database:
-            return await database.get(model)
+            return await database.get(self)
