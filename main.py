@@ -4,9 +4,9 @@ from models.user import User
 from dotenv import load_dotenv
 from contextlib import asynccontextmanager
 from fastapi.responses import HTMLResponse
-from models.base.base_model import validate
 from handlers.auth_handler import AuthHandler
 from handlers.template_handler import TemplateHandler
+from models.base.extended_types import Login, Password
 from middlewares.auth_middleware import AuthMiddleware
 from fastapi import FastAPI, Request, Response, Depends
 from handlers.greetings_handler import GreetingsHandler
@@ -45,12 +45,24 @@ app = FastAPI(
 async def template(request: Request) -> Response:
     return await template_handler.template(request)
 
+# @app.post('/registration')
+# async def auth(
+#     user: User = Depends(User.validate(fields=['login', 'password']))
+# ) -> Response:
+#     return await registration_handler.registration(user)
+
 @app.post('/registration')
-async def auth(user: User = Depends(User.validate(User, fields=['login', 'password']))) -> Response:
-    return await registration_handler.registration(user)
+async def auth(
+    login: Login,
+    password: Password
+) -> Response:
+    return await registration_handler.registration(User(login=login, password=password))
 
 @app.post('/auth')
-async def auth(request: Request, user: User = Depends(User.validate(User, fields=['login', 'password']))) -> Response:
+async def auth(
+    request: Request, 
+    user: User = Depends(User.validate(fields=['login', 'password']))
+) -> Response:
     return await auth_handler.auth(request, user)
 
 @app.get('/greetings')
