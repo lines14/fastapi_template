@@ -1,31 +1,35 @@
 import json
-from typing import Any
 from fastapi import Response
-from utils.data_utils import DataUtils
+from models.responses.response_model import ResponseModel
+from models.responses.response_content_model import ResponseContentModel
 
 class ResponseUtils:
     @staticmethod
-    async def success(msg: str, data: Any = '', status_code: int = 200) -> Response:
-        content = DataUtils.obj_template
-        content.status = True
-        content.message = msg
-        content.data = data
-
-        return Response(
+    async def success(
+        msg: str = '', 
+        data: str | dict | list = '', 
+        status_code: int = 200, 
+        media_type="application/json"
+    ) -> Response:
+        content = ResponseContentModel(success=True, message=msg, data=data)
+        response = ResponseModel(
             content=json.dumps(vars(content)), 
-            media_type="application/json", 
+            media_type=media_type, 
             status_code=status_code
         )
+        return Response(**vars(response))
 
     @staticmethod
-    async def error(msg: str, data: Any = '', status_code: int = 400) -> Response:
-        content = DataUtils.obj_template
-        content.status = False
-        content.message = msg
-        content.data = data
-
-        return Response(
+    async def error(
+        msg: str = '', 
+        data: str | dict | list = '', 
+        status_code: int = 400, 
+        media_type="application/json"
+    ) -> Response:
+        content = ResponseContentModel(success=False, message=msg, data=data)
+        response = ResponseModel(
             content=json.dumps(vars(content)), 
-            media_type="application/json", 
+            media_type=media_type, 
             status_code=status_code
         )
+        return Response(**vars(response))

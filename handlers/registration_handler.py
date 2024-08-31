@@ -1,13 +1,13 @@
 import traceback
 from models import User
-from fastapi import Request
 from utils.logger import Logger
+from fastapi import Request, Response
 from utils.data_utils import DataUtils
 from utils.response_utils import ResponseUtils
 from utils.cryptography_utils import CryptographyUtils
 
 class RegistrationHandler:
-    async def registration(self, request: Request) -> str:
+    async def registration(self, request: Request) -> Response:
         try:
             request_data = await request.json()
             if User(**request_data):

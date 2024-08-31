@@ -1,15 +1,15 @@
 import traceback
-from fastapi import Request
 from utils.logger import Logger
 from models import User, Session
 from utils.JWT_utils import JWTUtils
+from fastapi import Request, Response
 from utils.data_utils import DataUtils
 from utils.response_utils import ResponseUtils
 from utils.cryptography_utils import CryptographyUtils
 from repositories.redis_repository import RedisRepository
 
 class AuthHandler:
-    async def auth(self, request: Request) -> str:
+    async def auth(self, request: Request) -> Response:
         try:
             request_data = await request.json()
             if User(**request_data):

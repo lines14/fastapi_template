@@ -1,10 +1,10 @@
 import asyncio
 import aioschedule
 from dotenv import load_dotenv
-from fastapi import FastAPI, Request
 from contextlib import asynccontextmanager
 from fastapi.responses import HTMLResponse
 from handlers.auth_handler import AuthHandler
+from fastapi import FastAPI, Request, Response
 from handlers.template_handler import TemplateHandler
 from middlewares.auth_middleware import AuthMiddleware
 from handlers.greetings_handler import GreetingsHandler
@@ -35,22 +35,23 @@ app = FastAPI(
     lifespan=lifespan,
     title='Spending tracker API',
     docs_url='/docs',
+    redoc_url='/redoc',
     root_path='/api'
 )
 
 @app.get("/", response_class=HTMLResponse)
-async def template(request: Request) -> str:
+async def template(request: Request) -> Response:
     return await template_handler.template(request)
 
 @app.post('/registration')
-async def registration(request: Request) -> str:
+async def registration(request: Request) -> Response:
     return await registration_handler.registration(request)
 
 @app.post('/auth')
-async def auth(request: Request) -> str:
+async def auth(request: Request) -> Response:
     return await auth_handler.auth(request)
 
 @app.get('/greetings')
 @auth_middleware.check_bearer_token
-async def greetings(request: Request) -> str:
+async def greetings(request: Request) -> Response:
     return await greetings_handler.greetings(request)

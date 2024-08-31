@@ -1,13 +1,24 @@
+import traceback
 from sys import version
-from utils.data_utils import DataUtils
-from fastapi import Request, __version__
+from utils.logger import Logger
 from fastapi.templating import Jinja2Templates
+from utils.response_utils import ResponseUtils
+from fastapi import Request, Response, __version__
+from models.responses.response_template_model import ResponseTemplateModel
+from models.responses.response_template_context_model import ResponseTemplateContextModel
 
 class TemplateHandler:
-    async def template(self, request: Request) -> str:
-        data = DataUtils.obj_template
-        data.request = request
-        data.pythonVersion = version
-        data.fastapiVersion = __version__
-        templates = Jinja2Templates(directory="../templates")
-        return templates.TemplateResponse("index.html", vars(data))
+    async def template(self, request: Request) -> Response:
+        try:
+            data = ResponseTemplateContextModel(
+                request=request, 
+                pythonVersion=version, 
+                fastapiVersion=__version__
+            )
+            templates = Jinja2Templates(directory="../templates")
+            template = templates.TemplateResponse("index.html", vars(data))
+            ResponseTemplateModel(**vars(template))
+            return template
+        except Exception as e:
+            Logger.log(traceback.format_exc())
+            return await ResponseUtils.error(str(e))
