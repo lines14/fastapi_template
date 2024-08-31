@@ -1,6 +1,5 @@
 import asyncio
 import aioschedule
-from typing import Dict
 from models.user import User
 from dotenv import load_dotenv
 from contextlib import asynccontextmanager
@@ -48,15 +47,18 @@ async def template(request: Request) -> Response:
 
 @app.post('/registration')
 async def registration(
-    user: Dict[str, str] = Depends(validate(User, fields=['login', 'password']))
+    user: User = Depends(validate(User, fields=['login', 'password']))
 ) -> Response:
-    return await registration_handler.registration(User(**user))
+    return await registration_handler.registration(user)
 
 @app.post('/auth')
-async def auth(request: Request, user: User = Depends()) -> Response:
+async def auth(
+    request: Request, 
+    user: User = Depends(validate(User, fields=['login', 'password']))
+) -> Response:
     return await auth_handler.auth(request, user)
 
 @app.get('/greetings')
 @auth_middleware.check_bearer_token
-async def greetings() -> Response:
+async def greetings(request: Request) -> Response:
     return await greetings_handler.greetings()

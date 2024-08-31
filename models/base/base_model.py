@@ -1,11 +1,11 @@
+from typing import List, Type
 from sqlmodel import SQLModel
 from fastapi import HTTPException, Request
 from fastapi.exceptions import HTTPException
-from pydantic import ValidationError, create_model
+from pydantic import BaseModel, ValidationError, create_model
 
-def validate(cls, fields=None):
-    fields = fields or []
-    async def validator(request: Request):
+def validate(cls: Type[BaseModel], fields: List[str]):
+    async def validate_fields(request: Request) -> BaseModel:
         errors = []
         validated_data = {}
         data = await request.json()
@@ -26,8 +26,8 @@ def validate(cls, fields=None):
                 })
         if errors:
             raise HTTPException(422, detail=errors)
-        return validated_data
-    return validator
+        return cls(**validated_data)
+    return validate_fields
 
 class BaseModel(SQLModel):
     class Config:
