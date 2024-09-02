@@ -1,14 +1,13 @@
 import asyncio
 import aioschedule
-from models.user import User
+from DTO import UserDTO
 from dotenv import load_dotenv
 from contextlib import asynccontextmanager
 from fastapi.responses import HTMLResponse
 from handlers.auth_handler import AuthHandler
+from fastapi import FastAPI, Request, Response
 from handlers.template_handler import TemplateHandler
-from models.base.extended_types import Login, Password
 from middlewares.auth_middleware import AuthMiddleware
-from fastapi import FastAPI, Request, Response, Depends
 from handlers.greetings_handler import GreetingsHandler
 from handlers.registration_handler import RegistrationHandler
 from scheduler.currency_rates_updater import CurrencyRatesUpdater
@@ -45,24 +44,12 @@ app = FastAPI(
 async def template(request: Request) -> Response:
     return await template_handler.template(request)
 
-# @app.post('/registration')
-# async def auth(
-#     user: User = Depends(User.validate(fields=['login', 'password']))
-# ) -> Response:
-#     return await registration_handler.registration(user)
-
 @app.post('/registration')
-async def auth(
-    login: Login,
-    password: Password
-) -> Response:
-    return await registration_handler.registration(User(login=login, password=password))
+async def auth(user: UserDTO) -> Response:
+    return await registration_handler.registration(user)
 
 @app.post('/auth')
-async def auth(
-    request: Request, 
-    user: User = Depends(User.validate(fields=['login', 'password']))
-) -> Response:
+async def auth(request: Request, user: UserDTO) -> Response:
     return await auth_handler.auth(request, user)
 
 @app.get('/greetings')

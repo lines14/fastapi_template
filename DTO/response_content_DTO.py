@@ -1,7 +1,7 @@
 from pydantic import StrictBool
-from models.base.base_model import BaseModel
+from DTO.base.base_DTO import BaseDTO
 
-class ResponseContentModel(BaseModel):
+class ResponseContentDTO(BaseDTO):
     success: StrictBool
     message: str
     data: str | dict | list

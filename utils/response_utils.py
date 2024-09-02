@@ -1,7 +1,6 @@
 import json
 from fastapi import Response
-from models.responses.response_model import ResponseModel
-from models.responses.response_content_model import ResponseContentModel
+from DTO import ResponseDTO, ResponseContentDTO
 
 class ResponseUtils:
     @staticmethod
@@ -11,8 +10,8 @@ class ResponseUtils:
         status_code: int = 200, 
         media_type="application/json"
     ) -> Response:
-        content = ResponseContentModel(success=True, message=msg, data=data)
-        response = ResponseModel(
+        content = ResponseContentDTO(success=True, message=msg, data=data)
+        response = ResponseDTO(
             content=json.dumps(vars(content)), 
             media_type=media_type, 
             status_code=status_code
@@ -26,8 +25,8 @@ class ResponseUtils:
         status_code: int = 400, 
         media_type="application/json"
     ) -> Response:
-        content = ResponseContentModel(success=False, message=msg, data=data)
-        response = ResponseModel(
+        content = ResponseContentDTO(success=False, message=msg, data=data)
+        response = ResponseDTO(
             content=json.dumps(vars(content)), 
             media_type=media_type, 
             status_code=status_code

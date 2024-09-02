@@ -1,10 +1,23 @@
 from typing import Type, List
 from sqlmodel import SQLModel
 from fastapi import HTTPException, Request
+from database.base.database import Database
 from fastapi.exceptions import HTTPException
 from pydantic import BaseModel, ValidationError, create_model
 
 class BaseModel(SQLModel):
+    async def create(self):
+        async with Database() as database:
+            await database.create(self)
+
+    async def get(self):
+        async with Database() as database:
+            return await database.get(self)
+        
+    async def get_all(self):
+        async with Database() as database:
+            return await database.get_all(self)
+
     @classmethod
     def validate(cls: Type[BaseModel], fields: List[str]):
         async def validate_fields(request: Request) -> BaseModel:

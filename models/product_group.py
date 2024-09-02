@@ -1,6 +1,5 @@
 from sqlmodel import Field
 from datetime import datetime
-from database.base.database import Database
 from models.base.base_model import BaseModel
 from sqlalchemy import func, Column, func, DateTime
 
@@ -10,7 +9,3 @@ class ProductGroup(BaseModel, table=True):
     group: str = Field(nullable=False)
     created_at: datetime = Field(sa_column=Column(DateTime, server_default=func.now(), nullable=False))
     updated_at: datetime = Field(sa_column=Column(DateTime, server_default=func.now(), nullable=False, onupdate=func.now()))
-
-    async def get(self):
-        async with Database() as database:
-            return await database.get(self)

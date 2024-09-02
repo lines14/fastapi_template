@@ -1,7 +1,7 @@
 from fastapi import Request
-from models.base.base_model import BaseModel
+from DTO.base.base_DTO import BaseDTO
 
-class ResponseTemplateContextModel(BaseModel):
+class ResponseTemplateContextDTO(BaseDTO):
     request: Request
     pythonVersion: str
     fastapiVersion: str
