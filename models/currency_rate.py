@@ -1,7 +1,7 @@
 from sqlmodel import Field
 from datetime import datetime
 from models.base.base_model import BaseModel
-from sqlalchemy import func, Column, func, DateTime
+from sqlalchemy import func, Column, DateTime
 
 class CurrencyRate(BaseModel, table=True):
     __tablename__ = 'currency_rates'

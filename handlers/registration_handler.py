@@ -1,4 +1,5 @@
 import traceback
+from DTO import UserDTO
 from models import User
 from fastapi import Response
 from utils.logger import Logger
@@ -7,7 +8,7 @@ from utils.response_utils import ResponseUtils
 from utils.cryptography_utils import CryptographyUtils
 
 class RegistrationHandler:
-    async def registration(self, user: User) -> Response:
+    async def registration(self, user: UserDTO) -> Response:
         try:
             existing_user = await User(login=user.login).get()
             if not existing_user:

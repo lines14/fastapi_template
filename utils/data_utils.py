@@ -5,10 +5,6 @@ os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 class DataUtils():
     @classutilities.classproperty
-    def obj_template(cls):
-        return type('', (object,), {})()
-
-    @classutilities.classproperty
     def responses(cls):
         with open('../templates/responses.json', 'r', encoding='utf-8') as data:
             return type('', (object, ), json.loads(data.read()))

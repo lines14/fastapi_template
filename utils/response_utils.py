@@ -7,10 +7,14 @@ class ResponseUtils:
     async def success(
         msg: str = '', 
         data: str | dict | list = '', 
-        status_code: int = 200, 
+        status_code: int = 202, 
         media_type="application/json"
     ) -> Response:
-        content = ResponseContentDTO(success=True, message=msg, data=data)
+        content = ResponseContentDTO(
+            success=True, 
+            message=msg, 
+            data=data
+        )
         response = ResponseDTO(
             content=json.dumps(vars(content)), 
             media_type=media_type, 
@@ -25,7 +29,11 @@ class ResponseUtils:
         status_code: int = 400, 
         media_type="application/json"
     ) -> Response:
-        content = ResponseContentDTO(success=False, message=msg, data=data)
+        content = ResponseContentDTO(
+            success=False, 
+            message=msg, 
+            data=data
+        )
         response = ResponseDTO(
             content=json.dumps(vars(content)), 
             media_type=media_type, 

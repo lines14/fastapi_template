@@ -1,4 +1,5 @@
 import traceback
+from DTO import UserDTO
 from utils.logger import Logger
 from models import User, Session
 from utils.JWT_utils import JWTUtils
@@ -9,7 +10,7 @@ from utils.cryptography_utils import CryptographyUtils
 from repositories.redis_repository import RedisRepository
 
 class AuthHandler:
-    async def auth(self, request: Request, user: User) -> Response:
+    async def auth(self, request: Request, user: UserDTO) -> Response:
         try:
             existing_user = await User(login=user.login).get()
             if existing_user and CryptographyUtils.verify_string(user.password, existing_user.password):

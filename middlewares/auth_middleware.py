@@ -1,7 +1,7 @@
 import json
+from DTO import JWTDTO
 from models import Session
 from functools import wraps
-from DTO import JWTVerifyDTO
 from typing import Callable, Any
 from utils.JWT_utils import JWTUtils
 from fastapi import Request, Response
@@ -14,15 +14,15 @@ class AuthMiddleware:
     def check_bearer_token(self, function: Callable[..., Any]) -> Callable[..., Any]:
         @wraps(function)
         async def wrapper(request: Request, *args: Any, **kwargs: Any) -> Response:
-            auth = request.headers.get('Authorization')
-            if auth and auth.startswith('Bearer '):
+            auth_header = request.headers.get('Authorization')
+            if auth_header and auth_header.startswith('Bearer '):
                 try:
-                    token = auth.split(" ")[1]
-                    payload = JWTVerifyDTO(**JWTUtils.verify_token(token))
-                    savedToken = await RedisRepository().get_user(payload.login)
+                    request_token = auth_header.split(" ")[1]
+                    payload = JWTDTO(**JWTUtils.verify_token(request_token))
                     user = await Session(login=payload.login).get()
-                    if (savedToken and user and token == savedToken.decode('utf-8') 
-                        and CryptographyUtils.verify_string(token, user.token)):
+                    saved_token = await RedisRepository().get_user(payload.login)
+                    if (user and CryptographyUtils.verify_string(request_token, user.token) 
+                        and request_token == saved_token.decode('utf-8')):
                         return await function(request, *args, **kwargs)
                     else:
                         return await ResponseUtils.error(*DataUtils.responses.unauthorized)

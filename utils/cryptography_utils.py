@@ -2,7 +2,7 @@ import bcrypt
 
 class CryptographyUtils:
     @staticmethod
-    def hash_string(string: str):
+    def hash_string(string: str) -> str:
         string_bytes = string.encode('utf-8')
         hashed_string = bcrypt.hashpw(string_bytes, bcrypt.gensalt())
         return hashed_string.decode('utf-8')

@@ -1,5 +1,6 @@
 from os import getenv
 from typing import Dict
+from DTO import RedisDTO
 from config import Config
 import redis.asyncio as redis
 
@@ -9,7 +10,16 @@ class RedisRepository:
         self.__client = redis.Redis(connection_pool=pool)
 
     async def set_user(self, user_login: str, user_token: str) -> None:
-        await self.__client.setex(user_login, getenv('TTL'), user_token)
+        data = RedisDTO(
+            name=user_login, 
+            time=getenv('TOKEN_TTL'), 
+            value=user_token
+        )
+        await self.__client.setex(
+            data.name, 
+            data.time, 
+            data.value
+        )
 
     async def get_user(self, user_login: str) -> Dict:
         return await self.__client.get(user_login)
