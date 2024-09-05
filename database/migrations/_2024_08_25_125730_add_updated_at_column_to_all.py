@@ -19,41 +19,41 @@ depends_on: Union[str, Sequence[str], None] = None
 
 
 def upgrade() -> None:
-    with op.batch_alter_table("migrations", recreate='always') as batch_op:
+    with op.batch_alter_table("migrations") as batch_op:
         batch_op.add_column(
             sa.Column('updated_at', sa.DateTime(), server_default=sa.text('now()'), nullable=False)
         )
-    with op.batch_alter_table("users", recreate='always') as batch_op:
+    with op.batch_alter_table("users") as batch_op:
         batch_op.add_column(
             sa.Column('updated_at', sa.DateTime(), server_default=sa.text('now()'), nullable=False)
         )
-    with op.batch_alter_table("product_groups", recreate='always') as batch_op:
+    with op.batch_alter_table("product_groups") as batch_op:
         batch_op.add_column(
             sa.Column('updated_at', sa.DateTime(), server_default=sa.text('now()'), nullable=False)
         )
-    with op.batch_alter_table("product_types", recreate='always') as batch_op:
+    with op.batch_alter_table("product_types") as batch_op:
         batch_op.add_column(
             sa.Column('updated_at', sa.DateTime(), server_default=sa.text('now()'), nullable=False)
         )
-    with op.batch_alter_table("product_sub_types", recreate='always') as batch_op:
+    with op.batch_alter_table("product_sub_types") as batch_op:
         batch_op.add_column(
             sa.Column('updated_at', sa.DateTime(), server_default=sa.text('now()'), nullable=False)
         )
-    with op.batch_alter_table("currencies", recreate='always') as batch_op:
+    with op.batch_alter_table("currencies") as batch_op:
         batch_op.add_column(
             sa.Column('updated_at', sa.DateTime(), server_default=sa.text('now()'), nullable=False)
         )
-    with op.batch_alter_table("currency_rates", recreate='always') as batch_op:
+    with op.batch_alter_table("currency_rates") as batch_op:
         batch_op.add_column(
             sa.Column('updated_at', sa.DateTime(), server_default=sa.text('now()'), nullable=False)
         )
 
 
 def downgrade() -> None:
-    op.drop_column('migrations', 'updated_at')
-    op.drop_column('users', 'updated_at')
-    op.drop_column('product_groups', 'updated_at')
-    op.drop_column('product_types', 'updated_at')
-    op.drop_column('product_sub_types', 'updated_at')
-    op.drop_column('currencies', 'updated_at')
     op.drop_column('currency_rates', 'updated_at')
+    op.drop_column('currencies', 'updated_at')
+    op.drop_column('product_sub_types', 'updated_at')
+    op.drop_column('product_types', 'updated_at')
+    op.drop_column('product_groups', 'updated_at')
+    op.drop_column('users', 'updated_at')
+    op.drop_column('migrations', 'updated_at')

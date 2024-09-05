@@ -48,6 +48,6 @@ class BaseModel(SQLModel):
         return validate_fields
 
     class Config:
-        orm_mode = True
+        from_attributes = True
         validate_assignment = True
         arbitrary_types_allowed=True

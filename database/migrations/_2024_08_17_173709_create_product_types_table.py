@@ -22,7 +22,7 @@ def upgrade() -> None:
     op.create_table('product_types',
     sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
     sa.Column('type', sa.String(length=255), nullable=False),
-    sa.Column('group_id', sa.Integer(), nullable=False),
+    sa.Column('group_id', sa.Integer(), sa.ForeignKey('product_groups.id', ondelete='CASCADE'), nullable=False),
     sa.Column('created_at', sa.DateTime(), server_default=sa.text('now()'), nullable=False),
     sa.PrimaryKeyConstraint('id')
     )
@@ -30,5 +30,7 @@ def upgrade() -> None:
 
 
 def downgrade() -> None:
+    with op.batch_alter_table('product_types') as batch_op:
+        batch_op.drop_constraint('product_types_ibfk_1', type_='foreignkey')
     op.drop_index(op.f('ix_product_types_group_id'), table_name='product_types')
     op.drop_table('product_types')
