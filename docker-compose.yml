@@ -1,3 +1,5 @@
+version: '3'
+
 services:
   redis:
     image: "redis:latest"
@@ -18,8 +20,8 @@ services:
     restart: unless-stopped
     tty: true
     environment:
-      DB_ROOT_PASSWORD: "${DB_ROOT_PASSWORD}"
-      DB_NAME: "${DB_NAME}"
+      MYSQL_ROOT_PASSWORD: "${DB_ROOT_PASSWORD}"  # Corrected to MYSQL_ROOT_PASSWORD
+      MYSQL_DATABASE: "${DB_NAME}"                # Corrected to MYSQL_DATABASE
     ports:
       - "3306:3306"
     volumes:
