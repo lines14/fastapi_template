@@ -1,10 +1,6 @@
-from sqlalchemy import Column, String
+from sqlmodel import Field
 from models.base.base_model import BaseModel
 
-class ProductGroup(BaseModel):
+class ProductGroup(BaseModel, table=True):
     __tablename__ = 'product_groups'
-    group = Column(String, nullable=False)
-
-    def __init__(self, group=None):
-        super().__init__()
-        self.group = group
+    group: str = Field(nullable=False)

@@ -1,12 +1,7 @@
-from sqlalchemy import Column, String
+from sqlmodel import Field
 from models.base.base_model import BaseModel
 
-class User(BaseModel):
+class User(BaseModel, table=True):
     __tablename__ = 'users'
-    login: str = Column(String, index=True, nullable=False)
-    password: str = Column(String, nullable=False)
-
-    def __init__(self, login=None, password=None):
-        super().__init__()
-        self.login = login
-        self.password = password
+    login: str = Field(index=True, nullable=False)
+    password: str = Field(nullable=False)

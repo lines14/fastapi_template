@@ -1,17 +1,37 @@
+from sqlmodel import Field
+from sqlalchemy import func
 from typing import Type, List
-from datetime import datetime
+from datetime import datetime, timezone
+from sqlmodel import SQLModel, TIMESTAMP
 from fastapi import HTTPException, Request
 from database.base.database import Database
 from fastapi.exceptions import HTTPException
-from sqlalchemy import DateTime, Integer, func
-from sqlalchemy.orm import Mapped, mapped_column
 from pydantic import BaseModel, ValidationError, create_model
 
-class BaseModel(Database):
-    __abstract__ = True
-    id: Mapped[int] = mapped_column(Integer, primary_key=True, nullable=False)
-    created_at: Mapped[datetime] = mapped_column(DateTime, server_default=func.now(), nullable=False)
-    updated_at: Mapped[datetime] = mapped_column(DateTime, server_default=func.now(), nullable=False, onupdate=func.now())
+class BaseModel(SQLModel):
+    id: int = Field(primary_key=True, nullable=False)
+    created_at: datetime = Field(
+        sa_type=TIMESTAMP(timezone=True),
+        sa_column_kwargs={"server_default": func.now()},
+        nullable=False,
+    )
+    updated_at: datetime = Field(
+        sa_type=TIMESTAMP(timezone=True),
+        sa_column_kwargs={
+            "onupdate": lambda: datetime.now(timezone.utc), 
+            "server_default": func.now()
+        },
+        nullable=False,
+    )
+
+    async def create(self):
+        await Database().create(self)
+
+    async def get(self):
+        return await Database().get(self)
+        
+    async def get_all(self):
+        return await Database().get_all(self)
 
     @classmethod
     def validate(cls: Type[BaseModel], fields: List[str]):

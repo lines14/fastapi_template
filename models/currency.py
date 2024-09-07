@@ -1,10 +1,6 @@
-from sqlalchemy import Column, String
+from sqlmodel import Field
 from models.base.base_model import BaseModel
 
-class Currency(BaseModel):
+class Currency(BaseModel, table=True):
     __tablename__ = 'currencies'
-    currency = Column(String, index=True, nullable=False)
-
-    def __init__(self, currency=None):
-        super().__init__()
-        self.currency = currency
+    currency: str = Field(index=True, nullable=False)
