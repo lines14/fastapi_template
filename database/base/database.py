@@ -6,7 +6,7 @@ from sqlalchemy.ext.asyncio import async_sessionmaker, AsyncAttrs, create_async_
 
 class Database(AsyncAttrs, DeclarativeBase):
     def __init__(self):
-        self.engine = create_async_engine(Config().DB_URL_ASYNC)
+        self.engine = create_async_engine(Config().DB_URL_ASYNC) # if sqlite add arg: connect_args={'check_same_thread': False}
         self.session: AsyncSession = async_sessionmaker(
             bind=self.engine, 
             expire_on_commit=False, 
