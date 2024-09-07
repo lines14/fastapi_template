@@ -18,10 +18,9 @@ class {class_name}():
     revision: str = '{version}'\n
     def __init__(self):
         async def seed():
-            async with Database() as database:
-                await database.seed([
-                    # Add your seed data here
-                ])
+            await Database().seed([
+                # Add your seed data here
+            ])
         asyncio.create_task(seed())
 """
 

@@ -1,8 +1,10 @@
+import re
 from sqlmodel import Field
 from sqlalchemy import func
 from typing import Type, List
 from datetime import datetime, timezone
 from sqlmodel import SQLModel, TIMESTAMP
+from sqlalchemy.orm import declared_attr
 from fastapi import HTTPException, Request
 from database.base.database import Database
 from fastapi.exceptions import HTTPException
@@ -23,6 +25,10 @@ class BaseModel(SQLModel):
         },
         nullable=False,
     )
+
+    @declared_attr.directive
+    def __tablename__(cls) -> str:
+        return re.sub(r'(?<!^)(?=[A-Z])', '_', cls.__name__).lower() + 's'
 
     async def create(self):
         await Database().create(self)
