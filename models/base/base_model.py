@@ -1,22 +1,17 @@
 from typing import Type, List
-from sqlmodel import SQLModel
+from datetime import datetime
 from fastapi import HTTPException, Request
 from database.base.database import Database
 from fastapi.exceptions import HTTPException
+from sqlalchemy import DateTime, Integer, func
+from sqlalchemy.orm import Mapped, mapped_column
 from pydantic import BaseModel, ValidationError, create_model
 
-class BaseModel(SQLModel):
-    async def create(self):
-        async with Database() as database:
-            await database.create(self)
-
-    async def get(self):
-        async with Database() as database:
-            return await database.get(self)
-        
-    async def get_all(self):
-        async with Database() as database:
-            return await database.get_all(self)
+class BaseModel(Database):
+    __abstract__ = True
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, nullable=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime, server_default=func.now(), nullable=False)
+    updated_at: Mapped[datetime] = mapped_column(DateTime, server_default=func.now(), nullable=False, onupdate=func.now())
 
     @classmethod
     def validate(cls: Type[BaseModel], fields: List[str]):

@@ -28,9 +28,8 @@ class CurrencyRatesUpdater:
         for currency_rate in currency_rates:
             currency_rates_models.append(CurrencyRate(currency_id=(await Currency(currency=currency_rate.title).get()).id, 
                                                       rate=currency_rate.rate))
-        async with Database() as database:
-            await database.seed([
-                CurrencyRate(currency_id=(await Currency(currency='KZT').get()).id, rate=1),
-                *currency_rates_models
-            ])
+        await Database().seed([
+            CurrencyRate(currency_id=(await Currency(currency='KZT').get()).id, rate=1),
+            *currency_rates_models
+        ])
         print(f'INFO:     Successfully updated currency rates')

@@ -1,12 +1,12 @@
-from sqlmodel import Field
-from datetime import datetime
 from models.base.base_model import BaseModel
-from sqlalchemy import func, Column, DateTime
+from sqlalchemy import Column, Integer, String, ForeignKey
 
-class ProductSubType(BaseModel, table=True):
+class ProductSubType(BaseModel):
     __tablename__ = 'product_sub_types'
-    id: int = Field(primary_key=True, nullable=False)
-    sub_type: str = Field(nullable=False)
-    type_id: int = Field(index=True, nullable=False, foreign_key='product_types.id')
-    created_at: datetime = Field(sa_column=Column(DateTime, server_default=func.now(), nullable=False))
-    updated_at: datetime = Field(sa_column=Column(DateTime, server_default=func.now(), nullable=False, onupdate=func.now()))
+    sub_type = Column(String, nullable=False)
+    type_id = Column(Integer, ForeignKey('product_types.id'), index=True, nullable=False)
+
+    def __init__(self, sub_type=None, type_id=None):
+        super().__init__()
+        self.sub_type = sub_type
+        self.type_id = type_id

@@ -1,11 +1,10 @@
-from sqlmodel import Field
-from datetime import datetime
+from sqlalchemy import Column, String
 from models.base.base_model import BaseModel
-from sqlalchemy import func, Column, DateTime
 
-class ProductGroup(BaseModel, table=True):
+class ProductGroup(BaseModel):
     __tablename__ = 'product_groups'
-    id: int = Field(primary_key=True, nullable=False)
-    group: str = Field(nullable=False)
-    created_at: datetime = Field(sa_column=Column(DateTime, server_default=func.now(), nullable=False))
-    updated_at: datetime = Field(sa_column=Column(DateTime, server_default=func.now(), nullable=False, onupdate=func.now()))
+    group = Column(String, nullable=False)
+
+    def __init__(self, group=None):
+        super().__init__()
+        self.group = group

@@ -1,14 +1,16 @@
-from sqlmodel import Field
-from datetime import datetime
+from sqlalchemy import Column, String
 from models.base.base_model import BaseModel
-from sqlalchemy import func, Column, DateTime
 
-class Session(BaseModel, table=True):
+class Session(BaseModel):
     __tablename__ = 'sessions'
-    id: int = Field(primary_key=True, nullable=False)
-    login: str = Field(index=True, nullable=False)
-    host: str = Field(nullable=False)
-    user_agent: str = Field(nullable=False)
-    token: str = Field(nullable=False)
-    created_at: datetime = Field(sa_column=Column(DateTime, server_default=func.now(), nullable=False))
-    updated_at: datetime = Field(sa_column=Column(DateTime, server_default=func.now(), nullable=False, onupdate=func.now()))
+    login: str = Column(String, index=True, nullable=False)
+    host: str = Column(String, nullable=False)
+    user_agent: str = Column(String, nullable=False)
+    token: str = Column(String, nullable=False)
+
+    def __init__(self, login=None, token=None, host=None, user_agent=None):
+        super().__init__()
+        self.login = login
+        self.token = token
+        self.host = host
+        self.user_agent = user_agent

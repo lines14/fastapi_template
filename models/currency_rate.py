@@ -1,12 +1,12 @@
-from sqlmodel import Field
-from datetime import datetime
 from models.base.base_model import BaseModel
-from sqlalchemy import func, Column, DateTime
+from sqlalchemy import Column, Integer, Float, ForeignKey
 
-class CurrencyRate(BaseModel, table=True):
+class CurrencyRate(BaseModel):
     __tablename__ = 'currency_rates'
-    id: int = Field(primary_key=True, nullable=False)
-    rate: float = Field(nullable=False)
-    currency_id: int = Field(index=True, nullable=False, foreign_key='currencies.id')
-    created_at: datetime = Field(sa_column=Column(DateTime, server_default=func.now(), nullable=False))
-    updated_at: datetime = Field(sa_column=Column(DateTime, server_default=func.now(), nullable=False, onupdate=func.now()))
+    rate = Column(Float, nullable=False)
+    currency_id = Column(Integer, ForeignKey('currencies.id'), index=True, nullable=False)
+
+    def __init__(self, rate=None, currency_id=None):
+        super().__init__()
+        self.rate = rate
+        self.currency_id = currency_id

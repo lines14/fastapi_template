@@ -1,7 +1,7 @@
 from config import Config
 from datetime import datetime
-from sqlalchemy import inspect, desc, select
 from sqlalchemy.orm import DeclarativeBase
+from sqlalchemy import inspect, desc, select
 from sqlalchemy.ext.asyncio import async_sessionmaker, AsyncAttrs, create_async_engine, AsyncSession
 
 class Database(AsyncAttrs, DeclarativeBase):
@@ -27,21 +27,22 @@ class Database(AsyncAttrs, DeclarativeBase):
         await self.engine.dispose()
 
     async def seed(self, instances):
-        for index, instance in enumerate(instances):
-            instance.id = index + 1
-            await self.create_or_update(instance)
+        async with self as instance:
+            for index, obj in enumerate(instances):
+                obj.id = index + 1
+                await instance.create_or_update(obj)
 
-    async def create_or_update(self, instance):
-        instance_properties = {attr.key: getattr(instance, attr.key) for attr in inspect(instance).mapper.column_attrs}
-        instance_properties = {key: value for key, value in instance_properties.items() if value is not None}
-        properties_for_update = instance_properties
-        if 'id' in instance_properties:
-            instance_properties = {key: value for key, value in instance_properties.items() if key == 'id'}
-        filter_expressions = [getattr(type(instance), key) == value for key, value in instance_properties.items()]
+    async def create_or_update(self, obj):
+        obj_properties = {attr.key: getattr(obj, attr.key) for attr in inspect(obj).mapper.column_attrs}
+        obj_properties = {key: value for key, value in obj_properties.items() if value is not None}
+        properties_for_update = obj_properties
+        if 'id' in obj_properties:
+            obj_properties = {key: value for key, value in obj_properties.items() if key == 'id'}
+        filter_expressions = [getattr(type(obj), key) == value for key, value in obj_properties.items()]
         async with self.session.begin():
-            existing_record = ((await self.session.execute(select(type(instance))
+            existing_record = ((await self.session.execute(select(type(obj))
                                                            .filter(*filter_expressions)
-                                                           .order_by(desc(type(instance).id))))
+                                                           .order_by(desc(type(obj).id))))
                                                            .scalars()
                                                            .first())
             if existing_record:
@@ -49,25 +50,28 @@ class Database(AsyncAttrs, DeclarativeBase):
                     setattr(existing_record, attr, value)
                     setattr(existing_record, 'updated_at', datetime.utcnow())
             else:
-                self.session.add(instance)
+                self.session.add(obj)
             await self.session.commit()
 
-    async def create(self, instance):
-        async with self.session.begin():
-            self.session.add(instance)
-            await self.session.commit()
+    async def create(self):
+        async with self as instance:
+            async with instance.session.begin():
+                instance.session.add(instance)
+                await instance.session.commit()
 
-    async def get(self, instance):
-        instance_properties = {attr.key: getattr(instance, attr.key) for attr in inspect(instance).mapper.column_attrs}
-        instance_properties = {key: value for key, value in instance_properties.items() if value is not None}
-        filter_expressions = [getattr(type(instance), key) == value for key, value in instance_properties.items()]
-        async with self.session.begin():
-            return ((await self.session.execute(select(type(instance))
-                                                .filter(*filter_expressions)
-                                                .order_by(desc(type(instance).id))))
-                                                .scalars()
-                                                .first())
+    async def get(self):
+        async with self as instance:
+            instance_properties = {attr.key: getattr(instance, attr.key) for attr in inspect(instance).mapper.column_attrs}
+            instance_properties = {key: value for key, value in instance_properties.items() if value is not None}
+            filter_expressions = [getattr(type(instance), key) == value for key, value in instance_properties.items()]
+            async with instance.session.begin():
+                return ((await instance.session.execute(select(type(instance))
+                                                    .filter(*filter_expressions)
+                                                    .order_by(desc(type(instance).id))))
+                                                    .scalars()
+                                                    .first())
     
-    async def get_all(self, instance):
-        async with self.session.begin():
-            return (await self.session.execute(select(type(instance)))).scalars().all()
+    async def get_all(self):
+        async with self as instance:
+            async with instance.session.begin():
+                return (await instance.session.execute(select(type(instance)))).scalars().all()

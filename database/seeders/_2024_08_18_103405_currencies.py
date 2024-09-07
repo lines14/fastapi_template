@@ -7,11 +7,10 @@ class Currencies():
 
     def __init__(self):
         async def seed():
-            async with Database() as database:
-                await database.seed([
-                    Currency(currency='KZT'),
-                    Currency(currency='RUB'),
-                    Currency(currency='USD'),
-                    Currency(currency='EUR')
-                ])
+            await Database().seed([
+                Currency(currency='KZT'),
+                Currency(currency='RUB'),
+                Currency(currency='USD'),
+                Currency(currency='EUR')
+            ])
         asyncio.run(seed())
