@@ -58,6 +58,7 @@ class Database(AsyncAttrs, DeclarativeBase):
             async with self.session.begin():
                 self.session.add(instance)
                 await self.session.commit()
+            await self.session.refresh(instance)
 
     async def get(self, instance):
         async with self as self:
