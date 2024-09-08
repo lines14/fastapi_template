@@ -1,4 +1,4 @@
-from DTO.base.base_DTO import BaseDTO
+from DTO.base import BaseDTO
 
 class CurrencyRateRequestDTO(BaseDTO):
     fdate: str

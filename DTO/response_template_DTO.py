@@ -1,6 +1,6 @@
 from typing import Any
 from pydantic import Field
-from DTO.base.base_DTO import BaseDTO
+from DTO.base import BaseDTO
 from DTO.response_template_context_DTO import ResponseTemplateContextDTO
 
 class ResponseTemplateDTO(BaseDTO):

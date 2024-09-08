@@ -17,7 +17,7 @@ class RegistrationHandler:
                     password=CryptographyUtils.hash_string(user.password)
                 )
                 await new_user.create()
-                return await ResponseUtils.success(DataUtils.responses.registered_success)
+                return await ResponseUtils.success(DataUtils.responses.registered_message)
             else:
                 return await ResponseUtils.error(*DataUtils.responses.user_exists_error)
         except Exception as e:

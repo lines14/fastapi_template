@@ -1,6 +1,6 @@
 from typing import Union
+from DTO.base import BaseDTO
 from pydantic import StrictBool
-from DTO.base.base_DTO import BaseDTO
 
 class ResponseContentDTO(BaseDTO):
     success: StrictBool

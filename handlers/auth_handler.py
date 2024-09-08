@@ -23,7 +23,7 @@ class AuthHandler:
                     user_agent=request.headers.get('user-agent')
                 )
                 await session.create()
-                return await ResponseUtils.success(DataUtils.responses.authorized_success, token)
+                return await ResponseUtils.success(DataUtils.responses.authorized_message, token)
             else:
                 return await ResponseUtils.error(*DataUtils.responses.invalid_credentials_error)
         except Exception as e:
