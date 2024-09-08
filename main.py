@@ -1,9 +1,9 @@
 import asyncio
 import aioschedule
-from DTO import UserDTO
 from dotenv import load_dotenv
 from contextlib import asynccontextmanager
 from fastapi.responses import HTMLResponse
+from DTO import UserDTO, ResponseContentDTO
 from handlers.auth_handler import AuthHandler
 from fastapi import FastAPI, Request, Response
 from handlers.template_handler import TemplateHandler
@@ -44,15 +44,15 @@ app = FastAPI(
 async def template(request: Request) -> Response:
     return await template_handler.template(request)
 
-@app.post('/registration')
+@app.post('/registration', response_model=ResponseContentDTO)
 async def auth(user: UserDTO) -> Response:
     return await registration_handler.registration(user)
 
-@app.post('/auth')
+@app.post('/auth', response_model=ResponseContentDTO)
 async def auth(request: Request, user: UserDTO) -> Response:
     return await auth_handler.auth(request, user)
 
-@app.get('/greetings')
+@app.get('/greetings', response_model=ResponseContentDTO)
 @auth_middleware.check_bearer_token
 async def greetings(request: Request) -> Response:
     return await greetings_handler.greetings()

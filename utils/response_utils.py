@@ -8,7 +8,7 @@ class ResponseUtils:
     async def success(
         msg: str = '', 
         data: Union[str, dict, list] = '', 
-        status_code: int = 202, 
+        status_code: int = 200, 
         media_type="application/json"
     ) -> Response:
         content = ResponseContentDTO(
