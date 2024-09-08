@@ -17,6 +17,7 @@ class UserDTO(BaseDTO):
     )
 
     @model_validator(mode="after")
+    @classmethod
     def validate_fields(cls, values):
         login = values.login
         password = values.password
