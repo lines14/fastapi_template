@@ -7,7 +7,7 @@ from utils.response_utils import ResponseUtils
 class GreetingsHandler:
     async def greetings(self) -> Response:
         try:
-            return await ResponseUtils.success(DataUtils.responses.info)
+            return await ResponseUtils.success(DataUtils.responses.info_success)
         except Exception as e:
             Logger.log(traceback.format_exc())
             return await ResponseUtils.error(str(e))

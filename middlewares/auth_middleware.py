@@ -25,7 +25,7 @@ class AuthMiddleware:
                         and request_token == saved_token.decode('utf-8')):
                         return await function(request, *args, **kwargs)
                     else:
-                        return await ResponseUtils.error(*DataUtils.responses.unauthorized)
+                        return await ResponseUtils.error(*DataUtils.responses.unauthorized_error)
                 except Exception as e:
                     try:
                         error_response = json.loads(str(e))
@@ -33,5 +33,5 @@ class AuthMiddleware:
                     except:
                         return await ResponseUtils.error(str(e))
             else:
-                return await ResponseUtils.error(*DataUtils.responses.unauthorized)
+                return await ResponseUtils.error(*DataUtils.responses.unauthorized_error)
         return wrapper

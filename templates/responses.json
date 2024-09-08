@@ -1,8 +1,10 @@
 {
-    "unauthorized": ["Unauthorized", "", 401],
-    "invalid_credentials": ["Invalid credentials", "", 401],
-    "user_exists": ["User already exists", "", 401],
-    "info": "Hello, this response was created in FastAPI",
-    "authorized": "Successfully authorized in Spending tracker",
-    "registered": "Successfully registered in Spending tracker"
+    "unauthorized_error": ["Unauthorized", "", 401],
+    "invalid_credentials_error": ["Invalid credentials", "", 401],
+    "user_exists_error": ["User already exists", "", 401],
+    "info_success": "Hello, this response was created in FastAPI",
+    "authorized_success": "Successfully authorized in Spending tracker",
+    "registered_success": "Successfully registered in Spending tracker",
+    "login_validation_error": "login must be between 4 and 20 characters long without spaces and can contain only letters and numbers",
+    "password_validation_error": "password must be between 6 and 20 characters long without spaces and can contain only letters and numbers"
 }

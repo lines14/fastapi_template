@@ -30,7 +30,7 @@ class JWTUtils:
                 algorithms=[getenv('ENCODE_ALGORITHM')]
             )
         except jwt.ExpiredSignatureError as e:
-            raise jwt.ExpiredSignatureError(json.dumps(DataUtils.responses.unauthorized))
+            raise jwt.ExpiredSignatureError(json.dumps(DataUtils.responses.unauthorized_error))
         except jwt.InvalidTokenError as e:
             raise e
     

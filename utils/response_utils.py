@@ -1,4 +1,5 @@
 import json
+from typing import Union
 from fastapi import Response
 from DTO import ResponseDTO, ResponseContentDTO
 
@@ -6,7 +7,7 @@ class ResponseUtils:
     @staticmethod
     async def success(
         msg: str = '', 
-        data: str | dict | list = '', 
+        data: Union[str, dict, list] = '', 
         status_code: int = 202, 
         media_type="application/json"
     ) -> Response:
@@ -25,7 +26,7 @@ class ResponseUtils:
     @staticmethod
     async def error(
         msg: str = '', 
-        data: str | dict | list = '', 
+        data: Union[str, dict, list] = '', 
         status_code: int = 400, 
         media_type="application/json"
     ) -> Response:
