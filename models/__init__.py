@@ -1,5 +1,6 @@
 from .user import User
 from .session import Session
+from .purchase import Purchase
 from .currency import Currency
 from .product_type import ProductType
 from .product_group import ProductGroup

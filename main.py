@@ -4,21 +4,19 @@ from os import getenv
 from dotenv import load_dotenv
 from contextlib import asynccontextmanager
 from fastapi.responses import HTMLResponse
-from DTO import UserDTO, ResponseContentDTO
-from handlers.auth_handler import AuthHandler
 from fastapi import FastAPI, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
-from handlers.template_handler import TemplateHandler
 from middlewares.auth_middleware import AuthMiddleware
-from handlers.greetings_handler import GreetingsHandler
-from handlers.registration_handler import RegistrationHandler
+from DTO import UserDTO, ResponseContentDTO, PurchaseDTO
 from scheduler.currency_rates_updater import CurrencyRatesUpdater
+from handlers import AuthHandler, TemplateHandler, GreetingsHandler, RegistrationHandler, PurchaseHandler
 
 load_dotenv()
 
 auth_handler = AuthHandler()
 auth_middleware = AuthMiddleware()
 template_handler = TemplateHandler()
+purchase_handler = PurchaseHandler()
 greetings_handler = GreetingsHandler()
 registration_handler = RegistrationHandler()
 currency_rates_updater = CurrencyRatesUpdater()
@@ -66,3 +64,8 @@ async def auth(request: Request, user: UserDTO) -> Response:
 @auth_middleware.check_bearer_token
 async def greetings(request: Request) -> Response:
     return await greetings_handler.greetings()
+
+@app.post('/purchase', response_model=ResponseContentDTO)
+@auth_middleware.check_bearer_token
+async def create_purchase(request: Request, purchase: PurchaseDTO) -> Response:
+    return await purchase_handler.create_purchase(purchase)

@@ -16,9 +16,9 @@ else:
         seeders = [cls for name, cls in globals().items() if inspect.isclass(cls)]
         sorted_seeders = sorted(seeders, key=lambda cls: cls.revision)
         for seeder in sorted_seeders:
-            print(f'INFO Running {seeder.__name__} seeder')
+            print(f'INFO  Running {seeder.__name__} seeder')
             seeder()
     else:
         seeder = globals().get(seeder_name)
-        print(f'INFO Running {seeder.__name__} seeder')
+        print(f'INFO  Running {seeder.__name__} seeder')
         seeder()
