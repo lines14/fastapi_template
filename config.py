@@ -12,6 +12,7 @@ class Config(BaseSettings):
     DB_PORT: int
     TOKEN_TTL: int
     ENCODE_ALGORITHM: str
+    FRONT_URL: str
 
     model_config = SettingsConfigDict(env_file=os.path.join(os.path.dirname(os.path.abspath(__file__)), ".env"))
 

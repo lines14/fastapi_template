@@ -1,11 +1,13 @@
 import asyncio
 import aioschedule
+from os import getenv
 from dotenv import load_dotenv
 from contextlib import asynccontextmanager
 from fastapi.responses import HTMLResponse
 from DTO import UserDTO, ResponseContentDTO
 from handlers.auth_handler import AuthHandler
 from fastapi import FastAPI, Request, Response
+from fastapi.middleware.cors import CORSMiddleware
 from handlers.template_handler import TemplateHandler
 from middlewares.auth_middleware import AuthMiddleware
 from handlers.greetings_handler import GreetingsHandler
@@ -38,6 +40,14 @@ app = FastAPI(
     docs_url='/docs',
     redoc_url='/redoc',
     root_path='/api'
+)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[getenv('FRONT_URL')],
+    allow_credentials=True,
+    allow_methods=['*'],
+    allow_headers=['*']
 )
 
 @app.get("/", response_class=HTMLResponse)
