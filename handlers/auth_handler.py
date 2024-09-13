@@ -13,7 +13,7 @@ class AuthHandler:
     async def auth(self, request: Request, user: UserDTO) -> Response:
         try:
             existing_user = await User(login=user.login).get()
-            if existing_user and CryptographyUtils.verify_string(user.password, existing_user.password):
+            if existing_user and CryptographyUtils.verify_string(user.password, existing_user.hashed_password):
                 token = JWTUtils.generate_token(user.login)
                 await RedisRepository().set_user(user.login, token)
                 session = Session(

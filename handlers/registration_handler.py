@@ -14,7 +14,7 @@ class RegistrationHandler:
             if not existing_user:
                 new_user = User(
                     login=user.login, 
-                    password=CryptographyUtils.hash_string(user.password)
+                    hashed_password=CryptographyUtils.hash_string(user.password)
                 )
                 await new_user.create()
                 return await ResponseUtils.success(DataUtils.responses.registered_message)
