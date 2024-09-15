@@ -9,7 +9,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from middlewares.auth_middleware import AuthMiddleware
 from scheduler.currency_rates_updater import CurrencyRatesUpdater
 from DTO import UserDTO, ResponseContentDTO, PurchaseDTO, BankAccountDTO
-from handlers import AuthHandler, TemplateHandler, GreetingsHandler, RegistrationHandler, PurchaseHandler, BankAccountHandler
+from handlers import (AuthHandler, TemplateHandler, GreetingsHandler, 
+                      RegistrationHandler, PurchaseHandler, BankAccountHandler)
 
 load_dotenv()
 
