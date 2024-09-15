@@ -67,12 +67,17 @@ async def auth(request: Request, user: UserDTO) -> Response:
 async def greetings(request: Request) -> Response:
     return await greetings_handler.greetings()
 
+@app.post('/purchase', response_model=ResponseContentDTO)
+@auth_middleware.check_bearer_token
+async def create_purchase(request: Request, purchase: PurchaseDTO) -> Response:
+    return await purchase_handler.create_purchase(purchase)
+
 @app.post('/bank_account', response_model=ResponseContentDTO)
 @auth_middleware.check_bearer_token
 async def create_bank_account(request: Request, bank_account: BankAccountDTO) -> Response:
     return await bank_account_handler.create_bank_account(bank_account)
 
-@app.post('/purchase', response_model=ResponseContentDTO)
+@app.delete('/bank_account/{id}', response_model=ResponseContentDTO)
 @auth_middleware.check_bearer_token
-async def create_purchase(request: Request, purchase: PurchaseDTO) -> Response:
-    return await purchase_handler.create_purchase(purchase)
+async def delete_bank_account(request: Request, id: int) -> Response:
+    return await bank_account_handler.delete_bank_account(id)

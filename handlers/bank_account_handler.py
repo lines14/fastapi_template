@@ -20,3 +20,15 @@ class BankAccountHandler:
         except Exception as e:
             Logger.log(traceback.format_exc())
             return await ResponseUtils.error(str(e))
+        
+    async def delete_bank_account(self, id: int) -> Response:
+        try:
+            existing_bank_account = await BankAccount(id=id).get()
+            if existing_bank_account:
+                await BankAccount(id=id).delete()
+                return await ResponseUtils.success(DataUtils.responses.bank_account_deleted_message)
+            else:
+                return await ResponseUtils.error(DataUtils.responses.bank_account_not_exists)
+        except Exception as e:
+            Logger.log(traceback.format_exc())
+            return await ResponseUtils.error(str(e))

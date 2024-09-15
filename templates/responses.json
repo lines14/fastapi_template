@@ -15,5 +15,7 @@
     "issuer_id_validation_message": "issuer_id must be an existing id in bank_account_issuers table",
     "user_id_validation_message": "user_id must be an existing id in users table",
     "purchase_created_message": "Successfully created purchase",
-    "bank_account_created_message": "Successfully created bank account"
+    "bank_account_created_message": "Successfully created bank account",
+    "bank_account_deleted_message": "Successfully deleted bank account",
+    "bank_account_not_exists": "Bank account not exists"
 }

@@ -34,9 +34,12 @@ class Database(DeclarativeBase):
                 instance.id = index + 1
                 await db.create_or_update(instance)
 
-    async def create_or_update(self, instance):
+    async def get_not_empty_properties(self, instance):
         instance_properties = {attr.key: getattr(instance, attr.key) for attr in inspect(instance).mapper.column_attrs}
-        instance_properties = {key: value for key, value in instance_properties.items() if value is not None}
+        return {key: value for key, value in instance_properties.items() if value is not None}
+
+    async def create_or_update(self, instance):
+        instance_properties = await self.get_not_empty_properties(instance)
         properties_for_update = instance_properties
         if 'id' in instance_properties:
             instance_properties = {key: value for key, value in instance_properties.items() if key == 'id'}
@@ -53,6 +56,23 @@ class Database(DeclarativeBase):
                 self.session.add(instance)
             await self.session.commit()
 
+    async def delete(self, instance, soft_delete: bool):
+        async with self as db:
+            instance_properties = await self.get_not_empty_properties(instance)
+            if 'id' in instance_properties:
+                instance_properties = {key: value for key, value in instance_properties.items() if key == 'id'}
+            filter_expressions = [getattr(type(instance), key) == value for key, value in instance_properties.items()]
+            async with db.session.begin():
+                existing_record = (await db.session.execute(
+                    select(type(instance)).filter(*filter_expressions).order_by(desc(type(instance).id))
+                )).scalars().first()
+                if existing_record:
+                    if soft_delete:
+                        setattr(existing_record, 'deleted_at', datetime.utcnow())
+                    else:
+                        await db.session.delete(existing_record)
+                await db.session.commit()
+
     async def create(self, instance):
         async with self as db:
             async with db.session.begin():
@@ -60,17 +80,21 @@ class Database(DeclarativeBase):
                 await db.session.commit()
             await db.session.refresh(instance)
 
-    async def get(self, instance):
+    async def get(self, instance, with_soft_deleted: bool):
         async with self as db:
-            instance_properties = {attr.key: getattr(instance, attr.key) for attr in inspect(instance).mapper.column_attrs}
-            instance_properties = {key: value for key, value in instance_properties.items() if value is not None}
+            instance_properties = await self.get_not_empty_properties(instance)
             filter_expressions = [getattr(type(instance), key) == value for key, value in instance_properties.items()]
+            if not with_soft_deleted:
+                filter_expressions.append(getattr(type(instance), 'deleted_at') == None)
             async with db.session.begin():
                 return (await db.session.execute(
                     select(type(instance)).filter(*filter_expressions).order_by(desc(type(instance).id))
                 )).scalars().first()
     
-    async def get_all(self, instance):
+    async def get_all(self, instance, with_soft_deleted: bool):
         async with self as db:
+            query = select(type(instance))
+            if not with_soft_deleted:
+                query = query.filter(getattr(type(instance), 'deleted_at') == None)
             async with db.session.begin():
-                return (await db.session.execute(select(type(instance)))).scalars().all()
+                return (await db.session.execute(query)).scalars().all()

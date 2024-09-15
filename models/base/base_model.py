@@ -25,6 +25,10 @@ class BaseModel(SQLModel):
         },
         nullable=False,
     )
+    deleted_at: datetime = Field(
+        sa_type=TIMESTAMP(timezone=True),
+        nullable=True,
+    )
 
     @declared_attr.directive
     def __tablename__(cls) -> str:
@@ -33,11 +37,14 @@ class BaseModel(SQLModel):
     async def create(self):
         await Database().create(self)
 
-    async def get(self):
-        return await Database().get(self)
+    async def delete(self, soft_delete: bool = True):
+        await Database().delete(self, soft_delete)
+
+    async def get(self, with_soft_deleted: bool = False):
+        return await Database().get(self, with_soft_deleted)
         
-    async def get_all(self):
-        return await Database().get_all(self)
+    async def get_all(self, with_soft_deleted: bool = False):
+        return await Database().get_all(self, with_soft_deleted)
 
     @classmethod
     def validate(cls: Type[BaseModel], fields: List[str]):
