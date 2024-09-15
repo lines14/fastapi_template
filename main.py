@@ -7,9 +7,9 @@ from fastapi.responses import HTMLResponse
 from fastapi import FastAPI, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
 from middlewares.auth_middleware import AuthMiddleware
-from DTO import UserDTO, ResponseContentDTO, PurchaseDTO
 from scheduler.currency_rates_updater import CurrencyRatesUpdater
-from handlers import AuthHandler, TemplateHandler, GreetingsHandler, RegistrationHandler, PurchaseHandler
+from DTO import UserDTO, ResponseContentDTO, PurchaseDTO, BankAccountDTO
+from handlers import AuthHandler, TemplateHandler, GreetingsHandler, RegistrationHandler, PurchaseHandler, BankAccountHandler
 
 load_dotenv()
 
@@ -18,6 +18,7 @@ auth_middleware = AuthMiddleware()
 template_handler = TemplateHandler()
 purchase_handler = PurchaseHandler()
 greetings_handler = GreetingsHandler()
+bank_account_handler = BankAccountHandler()
 registration_handler = RegistrationHandler()
 currency_rates_updater = CurrencyRatesUpdater()
 
@@ -53,7 +54,7 @@ async def template(request: Request) -> Response:
     return await template_handler.template(request)
 
 @app.post('/registration', response_model=ResponseContentDTO)
-async def auth(user: UserDTO) -> Response:
+async def registration(user: UserDTO) -> Response:
     return await registration_handler.registration(user)
 
 @app.post('/auth', response_model=ResponseContentDTO)
@@ -64,6 +65,11 @@ async def auth(request: Request, user: UserDTO) -> Response:
 @auth_middleware.check_bearer_token
 async def greetings(request: Request) -> Response:
     return await greetings_handler.greetings()
+
+@app.post('/bank_account', response_model=ResponseContentDTO)
+@auth_middleware.check_bearer_token
+async def create_bank_account(request: Request, bank_account: BankAccountDTO) -> Response:
+    return await bank_account_handler.create_bank_account(bank_account)
 
 @app.post('/purchase', response_model=ResponseContentDTO)
 @auth_middleware.check_bearer_token

@@ -24,7 +24,7 @@ class {class_name}(BaseSeeder):
             await Database().seed([
                 # Add your seed data here
             ])
-        asyncio.create_task(seed())
+        asyncio.run(seed())
 """
 
     with open(os.path.join(cwd, 'database/seeders', version + '_' + file_name + '.py'), 'w') as file:

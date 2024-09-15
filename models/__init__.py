@@ -3,6 +3,8 @@ from .session import Session
 from .purchase import Purchase
 from .currency import Currency
 from .product_type import ProductType
+from .bank_account import BankAccount
 from .product_group import ProductGroup
 from .currency_rate import CurrencyRate
 from .product_sub_type import ProductSubType
+from .bank_account_issuer import BankAccountIssuer

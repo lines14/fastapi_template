@@ -7,8 +7,13 @@
     "registered_message": "Successfully registered in Spending tracker",
     "login_validation_message": "login must be without spaces and can contain only letters and numbers",
     "password_validation_message": "password must be without spaces and can contain only letters and numbers",
+    "account_validation_message": "account can contain only letters, numbers and spaces",
     "cost_validation_message": "cost must be floating point number rounded to two decimal places",
     "sub_type_id_validation_message": "sub_type_id must be an existing id in product_sub_types table",
     "currency_id_validation_message": "currency_id must be an existing id in currencies table",
-    "purchase_created_message": "Successfully created purchase"
+    "account_id_validation_message": "account_id must be an existing id in bank_accounts table",
+    "issuer_id_validation_message": "issuer_id must be an existing id in bank_account_issuers table",
+    "user_id_validation_message": "user_id must be an existing id in users table",
+    "purchase_created_message": "Successfully created purchase",
+    "bank_account_created_message": "Successfully created bank account"
 }

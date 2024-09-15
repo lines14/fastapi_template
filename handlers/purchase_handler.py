@@ -11,8 +11,8 @@ class PurchaseHandler:
         try:
             new_purchase = Purchase(
                 cost=purchase.cost, 
+                account_id=purchase.account_id,
                 sub_type_id=purchase.sub_type_id,
-                currency_id=purchase.currency_id
             )
             await new_purchase.create()
             return await ResponseUtils.success(DataUtils.responses.purchase_created_message)

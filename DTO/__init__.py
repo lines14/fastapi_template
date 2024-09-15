@@ -3,6 +3,7 @@ from .user_DTO import UserDTO
 from .redis_DTO import RedisDTO
 from .response_DTO import ResponseDTO
 from .purchase_DTO import PurchaseDTO
+from .bank_account_DTO import BankAccountDTO
 from .response_content_DTO import ResponseContentDTO
 from .response_template_DTO import ResponseTemplateDTO
 from .currency_rate_request_DTO import CurrencyRateRequestDTO
