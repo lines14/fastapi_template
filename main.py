@@ -77,6 +77,11 @@ async def create_purchase(request: Request, purchase: PurchaseDTO) -> Response:
 async def create_bank_account(request: Request, bank_account: BankAccountDTO) -> Response:
     return await bank_account_handler.create_bank_account(bank_account)
 
+@app.get('/bank_account/{id}', response_model=BankAccountDTO)
+@auth_middleware.check_bearer_token
+async def get_bank_account(request: Request, id: int) -> Response:
+    return await bank_account_handler.get_bank_account(id)
+
 @app.delete('/bank_account/{id}', response_model=ResponseContentDTO)
 @auth_middleware.check_bearer_token
 async def delete_bank_account(request: Request, id: int) -> Response:
